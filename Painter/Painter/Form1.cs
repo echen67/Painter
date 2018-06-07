@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections;
 
 namespace Painter
 {
@@ -22,12 +23,15 @@ namespace Painter
         int toolSelected = 0;
         Pen pen;
 
-        Bitmap myBitmap;
-        Bitmap layer2;
         Bitmap temp;
+        List<Bitmap> layers = new List<Bitmap>();
+        int activeLayer = 0;
 
         Graphics testG;
-       
+
+        bool draw0;
+        bool draw1;
+
         public Form1()
         {
             InitializeComponent();
@@ -38,8 +42,6 @@ namespace Painter
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
-            //testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
             this.DoubleBuffered = true;
             DoubleBuffered = true;
         }
@@ -47,9 +49,9 @@ namespace Painter
         private void Form1_Load(object sender, EventArgs e)
         {
             Graphics graphicsObj;
-            myBitmap = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-            myBitmap.MakeTransparent();
-            graphicsObj = Graphics.FromImage(myBitmap);
+            layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[0].MakeTransparent();
+            graphicsObj = Graphics.FromImage(layers[0]);
             graphicsObj.Clear(Color.Transparent);
             Pen myPen = new Pen(Color.Plum, 3);
             Rectangle rectangleObj = new Rectangle(10, 10, 200, 200);
@@ -57,9 +59,9 @@ namespace Painter
             graphicsObj.Dispose();
 
             Graphics g2;
-            layer2 = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-            layer2.MakeTransparent();
-            g2 = Graphics.FromImage(layer2);
+            layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[1].MakeTransparent();
+            g2 = Graphics.FromImage(layers[1]);
             g2.Clear(Color.Transparent);
             myPen = new Pen(Color.Tomato, 5);
             Rectangle r2 = new Rectangle(15, 15, 200, 200);
@@ -72,8 +74,16 @@ namespace Painter
 
         private void panel_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(layer2, 0, 0, layer2.Width, layer2.Height);
-            e.Graphics.DrawImage(myBitmap, 0, 0, myBitmap.Width, myBitmap.Height);
+            int numItems = layerPanel.Items.Count;
+            //draw0 = layerPanel.GetItemChecked(1);
+            if (draw0)
+            {
+                e.Graphics.DrawImage(layers[0], 0, 0, layers[0].Width, layers[0].Height);
+            }
+            if (draw1)
+            {
+                e.Graphics.DrawImage(layers[1], 0, 0, layers[1].Width, layers[1].Height);
+            }
 
             e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
         }
@@ -97,7 +107,7 @@ namespace Painter
                 yPos[1] = e.Y;
                 pen.Color = fgColor;
                 pen.Width = brushSize;
-                testG = Graphics.FromImage(myBitmap);
+                testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
@@ -117,8 +127,9 @@ namespace Painter
             drawFlag = false;
             if (toolSelected == 1)
             {
-                Pen pen = new Pen(fgColor, brushSize);
-                testG = Graphics.FromImage(myBitmap);
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(layers[activeLayer]);
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
             }
@@ -283,6 +294,25 @@ namespace Painter
         private void brushButton_Click(object sender, EventArgs e)
         {
             toolSelected = 0;
+        }
+
+        private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.Index == 1)
+            {
+                draw0 = e.NewValue == CheckState.Checked;
+            }
+            if (e.Index == 0)
+            {
+                draw1 = e.NewValue == CheckState.Checked;
+            }
+            panel.Refresh();
+        }
+
+        private void layerPanel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            activeLayer = layerPanel.SelectedIndex;
+            activeLayer = layerPanel.Items.Count - 1 - activeLayer;
         }
     }
 
