@@ -24,7 +24,10 @@ namespace Painter
 
         Bitmap myBitmap;
         Bitmap layer2;
+        Bitmap temp;
 
+        Graphics testG;
+       
         public Form1()
         {
             InitializeComponent();
@@ -34,6 +37,11 @@ namespace Painter
             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+
+            //testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            this.DoubleBuffered = true;
+            DoubleBuffered = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -57,19 +65,63 @@ namespace Painter
             Rectangle r2 = new Rectangle(15, 15, 200, 200);
             g2.DrawEllipse(myPen, r2);
             g2.Dispose();
+
+            temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            temp.MakeTransparent();
         }
 
         private void panel_Paint(object sender, PaintEventArgs e)
         {
-            Graphics graphicsObj = e.Graphics;
-            Graphics g2 = e.Graphics;
+            e.Graphics.DrawImage(layer2, 0, 0, layer2.Width, layer2.Height);
+            e.Graphics.DrawImage(myBitmap, 0, 0, myBitmap.Width, myBitmap.Height);
 
-            //graphicsObj.DrawImage(myBitmap, 50, 50, myBitmap.Width, myBitmap.Height);
-            g2.DrawImage(layer2, 0, 0, layer2.Width, layer2.Height);
-            graphicsObj.DrawImage(myBitmap, 50, 50, myBitmap.Width, myBitmap.Height);
+            e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
+        }
 
-            graphicsObj.Dispose();
-            g2.Dispose();
+        private void panel_MouseDown(object sender, MouseEventArgs e)
+        {
+            drawFlag = true;
+            xPos[0] = e.X;
+            xPos[1] = e.X;
+            yPos[0] = e.Y;
+            yPos[1] = e.Y;
+        }
+
+        private void panel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (drawFlag == true && toolSelected == 0)
+            {
+                xPos[0] = xPos[1];
+                xPos[1] = e.X;
+                yPos[0] = yPos[1];
+                yPos[1] = e.Y;
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(myBitmap);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
+                panel.Refresh();
+            } else if (drawFlag == true && toolSelected == 1)
+            {
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(temp);
+                testG.Clear(Color.Transparent);
+                testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
+                panel.Refresh();
+            }
+        }
+
+        private void panel_MouseUp(object sender, MouseEventArgs e)
+        {
+            drawFlag = false;
+            if (toolSelected == 1)
+            {
+                Pen pen = new Pen(fgColor, brushSize);
+                testG = Graphics.FromImage(myBitmap);
+                testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
+                panel.Refresh();
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -231,6 +283,16 @@ namespace Painter
         private void brushButton_Click(object sender, EventArgs e)
         {
             toolSelected = 0;
+        }
+    }
+
+    public class DoubleBufferedPanel : Panel
+    {
+        public DoubleBufferedPanel()
+        {
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.UserPaint, true);
         }
     }
 }

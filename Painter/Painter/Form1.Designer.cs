@@ -48,20 +48,21 @@
             this.brushButton = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.lineButton = new System.Windows.Forms.Button();
-            this.panel = new System.Windows.Forms.Panel();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.layerPanel = new System.Windows.Forms.Panel();
             this.layer0 = new System.Windows.Forms.Panel();
             this.layerButton0 = new System.Windows.Forms.Button();
             this.layer1 = new System.Windows.Forms.Panel();
             this.layerButton1 = new System.Windows.Forms.Button();
+            this.panel = new Painter.DoubleBufferedPanel();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
-            this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.layerPanel.SuspendLayout();
             this.layer0.SuspendLayout();
             this.layer1.SuspendLayout();
+            this.panel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -73,7 +74,7 @@
             this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(955, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1156, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -162,26 +163,24 @@
             // 
             // colorFG
             // 
-            this.colorFG.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.colorFG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.colorFG.BackColor = System.Drawing.Color.Black;
             this.colorFG.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.colorFG.Enabled = false;
             this.colorFG.FlatAppearance.BorderSize = 0;
             this.colorFG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorFG.Location = new System.Drawing.Point(885, 136);
+            this.colorFG.Location = new System.Drawing.Point(1080, 139);
             this.colorFG.Margin = new System.Windows.Forms.Padding(0);
             this.colorFG.Name = "colorFG";
             this.colorFG.Size = new System.Drawing.Size(40, 40);
             this.colorFG.TabIndex = 1;
             this.colorFG.UseVisualStyleBackColor = false;
-            this.colorFG.Visible = false;
             this.colorFG.Click += new System.EventHandler(this.colorFG_Click);
             // 
             // brushSizeBox
             // 
             this.brushSizeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.brushSizeBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.brushSizeBox.Location = new System.Drawing.Point(864, 72);
+            this.brushSizeBox.Location = new System.Drawing.Point(1065, 72);
             this.brushSizeBox.Minimum = new decimal(new int[] {
             1,
             0,
@@ -203,12 +202,12 @@
             // 
             // button1
             // 
-            this.button1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.BackColor = System.Drawing.Color.White;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(899, 152);
+            this.button1.Location = new System.Drawing.Point(1094, 155);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 40);
@@ -218,7 +217,7 @@
             // brushButton
             // 
             this.brushButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.brushButton.Location = new System.Drawing.Point(864, 43);
+            this.brushButton.Location = new System.Drawing.Point(1065, 43);
             this.brushButton.Name = "brushButton";
             this.brushButton.Size = new System.Drawing.Size(75, 23);
             this.brushButton.TabIndex = 4;
@@ -229,42 +228,13 @@
             // lineButton
             // 
             this.lineButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lineButton.Location = new System.Drawing.Point(864, 100);
+            this.lineButton.Location = new System.Drawing.Point(1065, 100);
             this.lineButton.Name = "lineButton";
             this.lineButton.Size = new System.Drawing.Size(75, 23);
             this.lineButton.TabIndex = 7;
             this.lineButton.Text = "Line";
             this.lineButton.UseVisualStyleBackColor = true;
             this.lineButton.Click += new System.EventHandler(this.lineButton_Click);
-            // 
-            // panel
-            // 
-            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel.AutoScroll = true;
-            this.panel.BackColor = System.Drawing.Color.Maroon;
-            this.panel.Controls.Add(this.pictureBox);
-            this.panel.Location = new System.Drawing.Point(12, 43);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(712, 475);
-            this.panel.TabIndex = 2;
-            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pictureBox.Enabled = false;
-            this.pictureBox.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(500, 400);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.Visible = false;
-            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
-            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
-            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
             // 
             // layerPanel
             // 
@@ -273,7 +243,7 @@
             this.layerPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.layerPanel.Controls.Add(this.layer0);
             this.layerPanel.Controls.Add(this.layer1);
-            this.layerPanel.Location = new System.Drawing.Point(750, 213);
+            this.layerPanel.Location = new System.Drawing.Point(951, 474);
             this.layerPanel.Name = "layerPanel";
             this.layerPanel.Size = new System.Drawing.Size(189, 305);
             this.layerPanel.TabIndex = 8;
@@ -320,12 +290,56 @@
             this.layerButton1.Text = "View";
             this.layerButton1.UseVisualStyleBackColor = true;
             // 
+            // panel
+            // 
+            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel.AutoScroll = true;
+            this.panel.BackColor = System.Drawing.Color.Maroon;
+            this.panel.Controls.Add(this.pictureBox);
+            this.panel.Location = new System.Drawing.Point(12, 43);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(913, 736);
+            this.panel.TabIndex = 2;
+            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
+            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Layer1",
+            "Layer0"});
+            this.checkedListBox1.Location = new System.Drawing.Point(951, 269);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(190, 123);
+            this.checkedListBox1.TabIndex = 1;
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pictureBox.Enabled = false;
+            this.pictureBox.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(500, 400);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox.TabIndex = 0;
+            this.pictureBox.TabStop = false;
+            this.pictureBox.Visible = false;
+            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
+            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
+            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(955, 538);
+            this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.colorFG);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lineButton);
@@ -341,12 +355,12 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).EndInit();
-            this.panel.ResumeLayout(false);
-            this.panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.layerPanel.ResumeLayout(false);
             this.layer0.ResumeLayout(false);
             this.layer1.ResumeLayout(false);
+            this.panel.ResumeLayout(false);
+            this.panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -374,13 +388,14 @@
         private System.Windows.Forms.NumericUpDown brushSizeBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.Button lineButton;
-        private System.Windows.Forms.Panel panel;
+        private DoubleBufferedPanel panel;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Panel layerPanel;
         private System.Windows.Forms.Panel layer1;
         private System.Windows.Forms.Button layerButton1;
         private System.Windows.Forms.Panel layer0;
         private System.Windows.Forms.Button layerButton0;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
     }
 }
 
