@@ -17,6 +17,7 @@ namespace Painter
         bool drawFlag = false;
         int[] xPos = new int[2];
         int[] yPos = new int[2];
+        List<Point> points = new List<Point>();
         Graphics G;
         Color fgColor = Color.Black;
         int brushSize = 1;
@@ -85,6 +86,8 @@ namespace Painter
             xPos[1] = e.X;
             yPos[0] = e.Y;
             yPos[1] = e.Y;
+            points = new List<Point>();
+            points.Add(new Point(e.X, e.Y));
         }
 
         private void panel_MouseMove(object sender, MouseEventArgs e)
@@ -95,10 +98,18 @@ namespace Painter
                 xPos[1] = e.X;
                 yPos[0] = yPos[1];
                 yPos[1] = e.Y;
-                pen.Color = fgColor;
+                points.Add(new Point(e.X, e.Y));
+                Point[] pointsArr = points.ToArray<Point>();
+
+                pen.Color = Color.FromArgb(opacityBar.Value, fgColor);
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                //Pen eraser = new Pen(Color.FromArgb(0, fgColor), brushSize);
+                //testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                //testG.DrawLines(eraser, pointsArr);
+                //testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                //testG.DrawLines(pen, pointsArr);
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
             } else if (drawFlag == true && toolSelected == 1)   // LINE PREVIEW
@@ -107,7 +118,21 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
+                panel.Refresh();
+            } else if (drawFlag == true && toolSelected == 2)   // ERASER
+            {
+                xPos[0] = xPos[1];
+                xPos[1] = e.X;
+                yPos[0] = yPos[1];
+                yPos[1] = e.Y;
+                pen.Color = Color.Transparent;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(layers[activeLayer]);
+                testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
             }
         }
@@ -120,6 +145,7 @@ namespace Painter
                 pen.Color = fgColor;
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
             }
@@ -317,6 +343,11 @@ namespace Painter
             drawLayers.Add(true);
 
             layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
+        }
+
+        private void eraseButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 2;
         }
     }
 

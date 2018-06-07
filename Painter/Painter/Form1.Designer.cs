@@ -50,10 +50,13 @@
             this.lineButton = new System.Windows.Forms.Button();
             this.layerPanel = new System.Windows.Forms.CheckedListBox();
             this.newLayer = new System.Windows.Forms.Button();
+            this.eraseButton = new System.Windows.Forms.Button();
+            this.opacityBar = new System.Windows.Forms.TrackBar();
             this.panel = new Painter.DoubleBufferedPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
             this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -161,7 +164,7 @@
             this.colorFG.Cursor = System.Windows.Forms.Cursors.Hand;
             this.colorFG.FlatAppearance.BorderSize = 0;
             this.colorFG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorFG.Location = new System.Drawing.Point(1080, 139);
+            this.colorFG.Location = new System.Drawing.Point(1065, 362);
             this.colorFG.Margin = new System.Windows.Forms.Padding(0);
             this.colorFG.Name = "colorFG";
             this.colorFG.Size = new System.Drawing.Size(40, 40);
@@ -200,7 +203,7 @@
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(1094, 155);
+            this.button1.Location = new System.Drawing.Point(1079, 378);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 40);
@@ -236,7 +239,7 @@
             this.layerPanel.Items.AddRange(new object[] {
             "Layer1",
             "Layer0"});
-            this.layerPanel.Location = new System.Drawing.Point(951, 269);
+            this.layerPanel.Location = new System.Drawing.Point(951, 627);
             this.layerPanel.Name = "layerPanel";
             this.layerPanel.Size = new System.Drawing.Size(190, 123);
             this.layerPanel.TabIndex = 1;
@@ -246,13 +249,34 @@
             // newLayer
             // 
             this.newLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.newLayer.Location = new System.Drawing.Point(951, 398);
+            this.newLayer.Location = new System.Drawing.Point(951, 756);
             this.newLayer.Name = "newLayer";
             this.newLayer.Size = new System.Drawing.Size(75, 23);
             this.newLayer.TabIndex = 8;
             this.newLayer.Text = "New";
             this.newLayer.UseVisualStyleBackColor = true;
             this.newLayer.Click += new System.EventHandler(this.newLayer_Click);
+            // 
+            // eraseButton
+            // 
+            this.eraseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.eraseButton.Location = new System.Drawing.Point(1065, 129);
+            this.eraseButton.Name = "eraseButton";
+            this.eraseButton.Size = new System.Drawing.Size(75, 23);
+            this.eraseButton.TabIndex = 9;
+            this.eraseButton.Text = "Eraser";
+            this.eraseButton.UseVisualStyleBackColor = true;
+            this.eraseButton.Click += new System.EventHandler(this.eraseButton_Click);
+            // 
+            // opacityBar
+            // 
+            this.opacityBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.opacityBar.Location = new System.Drawing.Point(1052, 158);
+            this.opacityBar.Maximum = 255;
+            this.opacityBar.Name = "opacityBar";
+            this.opacityBar.Size = new System.Drawing.Size(104, 56);
+            this.opacityBar.TabIndex = 10;
+            this.opacityBar.Value = 255;
             // 
             // panel
             // 
@@ -292,6 +316,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.opacityBar);
+            this.Controls.Add(this.eraseButton);
             this.Controls.Add(this.newLayer);
             this.Controls.Add(this.layerPanel);
             this.Controls.Add(this.colorFG);
@@ -308,6 +334,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).EndInit();
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
@@ -342,6 +369,8 @@
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.CheckedListBox layerPanel;
         private System.Windows.Forms.Button newLayer;
+        private System.Windows.Forms.Button eraseButton;
+        private System.Windows.Forms.TrackBar opacityBar;
     }
 }
 
