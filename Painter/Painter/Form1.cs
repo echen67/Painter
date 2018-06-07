@@ -24,7 +24,8 @@ namespace Painter
         Pen pen;
 
         Bitmap temp;
-        List<Bitmap> layers = new List<Bitmap>();
+        List<Bitmap> layers = new List<Bitmap>();   //list of bitmaps, photoshop order
+        List<bool> drawLayers = new List<bool>();   //list of whether each layer is checked, photoshop order
         int activeLayer = 0;
 
         Graphics testG;
@@ -48,41 +49,30 @@ namespace Painter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Graphics graphicsObj;
             layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
             layers[0].MakeTransparent();
-            graphicsObj = Graphics.FromImage(layers[0]);
-            graphicsObj.Clear(Color.Transparent);
-            Pen myPen = new Pen(Color.Plum, 3);
-            Rectangle rectangleObj = new Rectangle(10, 10, 200, 200);
-            graphicsObj.DrawEllipse(myPen, rectangleObj);
-            graphicsObj.Dispose();
+            drawLayers.Insert(0, true);
 
-            Graphics g2;
             layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
             layers[1].MakeTransparent();
-            g2 = Graphics.FromImage(layers[1]);
-            g2.Clear(Color.Transparent);
-            myPen = new Pen(Color.Tomato, 5);
-            Rectangle r2 = new Rectangle(15, 15, 200, 200);
-            g2.DrawEllipse(myPen, r2);
-            g2.Dispose();
+            drawLayers.Insert(1, true);
 
             temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             temp.MakeTransparent();
+
+            layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
+            layerPanel.SetItemChecked(1, true);
         }
 
         private void panel_Paint(object sender, PaintEventArgs e)
         {
             int numItems = layerPanel.Items.Count;
-            //draw0 = layerPanel.GetItemChecked(1);
-            if (draw0)
+            for (int i = 0; i < numItems; i++)
             {
-                e.Graphics.DrawImage(layers[0], 0, 0, layers[0].Width, layers[0].Height);
-            }
-            if (draw1)
-            {
-                e.Graphics.DrawImage(layers[1], 0, 0, layers[1].Width, layers[1].Height);
+                if (drawLayers[i])
+                {
+                    e.Graphics.DrawImage(layers[i], 0, 0, layers[i].Width, layers[i].Height);
+                }
             }
 
             e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
@@ -99,7 +89,7 @@ namespace Painter
 
         private void panel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (drawFlag == true && toolSelected == 0)
+            if (drawFlag == true && toolSelected == 0)      // BRUSH
             {
                 xPos[0] = xPos[1];
                 xPos[1] = e.X;
@@ -111,7 +101,7 @@ namespace Painter
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
-            } else if (drawFlag == true && toolSelected == 1)
+            } else if (drawFlag == true && toolSelected == 1)   // LINE PREVIEW
             {
                 pen.Color = fgColor;
                 pen.Width = brushSize;
@@ -125,7 +115,7 @@ namespace Painter
         private void panel_MouseUp(object sender, MouseEventArgs e)
         {
             drawFlag = false;
-            if (toolSelected == 1)
+            if (toolSelected == 1)      // LINE
             {
                 pen.Color = fgColor;
                 pen.Width = brushSize;
@@ -298,13 +288,13 @@ namespace Painter
 
         private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (e.Index == 1)
+            int numItems = layerPanel.Items.Count;
+            for (int i = 0; i < numItems; i++)
             {
-                draw0 = e.NewValue == CheckState.Checked;
-            }
-            if (e.Index == 0)
-            {
-                draw1 = e.NewValue == CheckState.Checked;
+                if (e.Index == (numItems - 1 - i))
+                {
+                    drawLayers[i] = e.NewValue == CheckState.Checked;
+                }
             }
             panel.Refresh();
         }
@@ -313,6 +303,20 @@ namespace Painter
         {
             activeLayer = layerPanel.SelectedIndex;
             activeLayer = layerPanel.Items.Count - 1 - activeLayer;
+        }
+
+        private void newLayer_Click(object sender, EventArgs e)
+        {
+            layerPanel.Items.Insert(0, "Layer");
+
+            //layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers.Add(new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[layers.Count-1].MakeTransparent();
+
+            //drawLayers.Insert(0, true);
+            drawLayers.Add(true);
+
+            layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
         }
     }
 

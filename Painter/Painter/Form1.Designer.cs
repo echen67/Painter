@@ -49,6 +49,7 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.lineButton = new System.Windows.Forms.Button();
             this.layerPanel = new System.Windows.Forms.CheckedListBox();
+            this.newLayer = new System.Windows.Forms.Button();
             this.panel = new Painter.DoubleBufferedPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
@@ -242,6 +243,17 @@
             this.layerPanel.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.layerPanel_ItemCheck);
             this.layerPanel.SelectedIndexChanged += new System.EventHandler(this.layerPanel_SelectedIndexChanged);
             // 
+            // newLayer
+            // 
+            this.newLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.newLayer.Location = new System.Drawing.Point(951, 398);
+            this.newLayer.Name = "newLayer";
+            this.newLayer.Size = new System.Drawing.Size(75, 23);
+            this.newLayer.TabIndex = 8;
+            this.newLayer.Text = "New";
+            this.newLayer.UseVisualStyleBackColor = true;
+            this.newLayer.Click += new System.EventHandler(this.newLayer_Click);
+            // 
             // panel
             // 
             this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -280,6 +292,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.newLayer);
             this.Controls.Add(this.layerPanel);
             this.Controls.Add(this.colorFG);
             this.Controls.Add(this.button1);
@@ -328,6 +341,7 @@
         private DoubleBufferedPanel panel;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.CheckedListBox layerPanel;
+        private System.Windows.Forms.Button newLayer;
     }
 }
 
