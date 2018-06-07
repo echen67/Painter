@@ -19,23 +19,64 @@ namespace Painter
         Graphics G;
         Color fgColor = Color.Black;
         int brushSize = 1;
+        int toolSelected = 0;
+        Pen pen;
+
+        Bitmap myBitmap;
+        Bitmap layer2;
 
         public Form1()
         {
             InitializeComponent();
-            //InitializeColorDialog();
+            this.WindowState = FormWindowState.Maximized;
+
+            pen = new Pen(fgColor, brushSize);
+            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
         }
 
-        private void InitializeColorDialog()
+        private void Form1_Load(object sender, EventArgs e)
         {
-            //not necessary, already does what i want???
-            colorDialog.AllowFullOpen = true;
-            colorDialog.AnyColor = true;
-            colorDialog.FullOpen = true;
+            Graphics graphicsObj;
+            myBitmap = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            myBitmap.MakeTransparent();
+            graphicsObj = Graphics.FromImage(myBitmap);
+            graphicsObj.Clear(Color.Transparent);
+            Pen myPen = new Pen(Color.Plum, 3);
+            Rectangle rectangleObj = new Rectangle(10, 10, 200, 200);
+            graphicsObj.DrawEllipse(myPen, rectangleObj);
+            graphicsObj.Dispose();
+
+            Graphics g2;
+            layer2 = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            layer2.MakeTransparent();
+            g2 = Graphics.FromImage(layer2);
+            g2.Clear(Color.Transparent);
+            myPen = new Pen(Color.Tomato, 5);
+            Rectangle r2 = new Rectangle(15, 15, 200, 200);
+            g2.DrawEllipse(myPen, r2);
+            g2.Dispose();
+        }
+
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphicsObj = e.Graphics;
+            Graphics g2 = e.Graphics;
+
+            //graphicsObj.DrawImage(myBitmap, 50, 50, myBitmap.Width, myBitmap.Height);
+            g2.DrawImage(layer2, 0, 0, layer2.Width, layer2.Height);
+            graphicsObj.DrawImage(myBitmap, 50, 50, myBitmap.Width, myBitmap.Height);
+
+            graphicsObj.Dispose();
+            g2.Dispose();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            pictureBox.Enabled = true;
+            pictureBox.Visible = true;
+
             pictureBox.BackColor = Color.White;
             Bitmap bmp = new Bitmap(pictureBox.Width, pictureBox.Height);
             pictureBox.Image = bmp;
@@ -65,7 +106,7 @@ namespace Painter
             //newDialog.Dispose();
         }
 
-        private void colorFG_Click_1(object sender, EventArgs e)
+        private void colorFG_Click(object sender, EventArgs e)
         {
             DialogResult result = colorDialog.ShowDialog();
             if (result.Equals(DialogResult.OK))
@@ -97,11 +138,6 @@ namespace Painter
                     MessageBox.Show("Error: " + ex.Message);
                 }
             }
-        }
-
-        private void pictureBox_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -146,26 +182,31 @@ namespace Painter
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (drawFlag == true)
+            if (drawFlag == true && toolSelected == 0)
             {
                 xPos[0] = xPos[1];
                 xPos[1] = e.X;
                 yPos[0] = yPos[1];
                 yPos[1] = e.Y;
-                Pen pen = new Pen(fgColor, brushSize);
-                Brush brush = new SolidBrush(fgColor);
-                pen = new Pen(brush, brushSize);
-                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+                pen.Color = fgColor;
+                pen.Width = brushSize;
                 G.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 pictureBox.Refresh();
+            } else if (toolSelected == 1)
+            {
+                //
             }
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             drawFlag = false;
+            if (toolSelected == 1)
+            {
+                Pen pen = new Pen(fgColor, brushSize);
+                G.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
+                pictureBox.Refresh();
+            }
         }
 
         private void brushSizeBox_ValueChanged(object sender, EventArgs e)
@@ -180,6 +221,16 @@ namespace Painter
             {
                 pictureBox.Image.Save(saveFileDialog.FileName);
             }
+        }
+
+        private void lineButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 1;
+        }
+
+        private void brushButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 0;
         }
     }
 }
