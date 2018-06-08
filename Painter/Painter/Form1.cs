@@ -31,8 +31,10 @@ namespace Painter
 
         Graphics testG;
 
-        bool draw0;
-        bool draw1;
+        Bitmap memoryImage;
+
+        bool paintCursor = false;   // whether cursor should be circle
+        Point mouseLoc;
 
         public Form1()
         {
@@ -50,6 +52,7 @@ namespace Painter
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Set up layers panel
             layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
             layers[0].MakeTransparent();
             drawLayers.Insert(0, true);
@@ -63,6 +66,7 @@ namespace Painter
 
             layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
             layerPanel.SetItemChecked(1, true);
+            layerPanel.SetSelected(1, true);        // set bottom layer to selected
         }
 
         private void panel_Paint(object sender, PaintEventArgs e)
@@ -77,6 +81,15 @@ namespace Painter
             }
 
             e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
+
+            // draw cursor as a circle, but not if eyedropper is selected
+            if (paintCursor && toolSelected != 3)
+            {
+                e.Graphics.DrawEllipse(new Pen(Color.Black, 0.5f), mouseLoc.X-(brushSize/2f), mouseLoc.Y-(brushSize/2f), brushSize, brushSize);
+            } else
+            {
+                Cursor.Show();
+            }
         }
 
         private void panel_MouseDown(object sender, MouseEventArgs e)
@@ -92,6 +105,8 @@ namespace Painter
 
         private void panel_MouseMove(object sender, MouseEventArgs e)
         {
+            mouseLoc = e.Location;
+            panel.Refresh();
             if (drawFlag == true && toolSelected == 0)      // BRUSH
             {
                 xPos[0] = xPos[1];
@@ -348,6 +363,61 @@ namespace Painter
         private void eraseButton_Click(object sender, EventArgs e)
         {
             toolSelected = 2;
+        }
+
+        //private Color getColor(int x, int y)
+        //{
+        //    Bitmap bmp = new Bitmap(1, 1);
+        //    using (Graphics g = Graphics.FromImage(bmp))
+        //    {
+        //        g.CopyFromScreen(x, y, 0, 0, new Size(1, 1));
+        //    }
+        //    return bmp.GetPixel(0, 0);
+        //}
+
+        private void eyeDropButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 3;
+        }
+
+        private void panel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (toolSelected == 3)
+            {
+                //Point pt = System.Windows.Forms.Cursor.Position;
+                //Color clr = getColor(pt.X, pt.Y);
+                //CaptureScreen();
+                //Point pt2 = PointToScreen(new Point(e.X, e.Y));
+                //Color clr = memoryImage.GetPixel(pt2.X, pt2.Y);
+                //colorFG.BackColor = clr;
+                //debug.Text = memoryImage.Width + ", " + memoryImage.Height;
+                //debug.Text = pt2.X + ", " + pt2.Y;
+
+                Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
+                colorFG.BackColor = clr;
+            }
+        }
+
+        //private void CaptureScreen()
+        //{
+        //    Graphics myGraphics = this.CreateGraphics();
+        //    Size s = this.Size;
+        //    memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
+        //    Graphics memoryGraphics = Graphics.FromImage(memoryImage);
+        //    memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
+        //}
+
+        private void panel_MouseEnter(object sender, EventArgs e)
+        {
+            Cursor.Hide();
+            paintCursor = true;
+        }
+
+        private void panel_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor.Show();
+            paintCursor = false;
+            panel.Refresh();
         }
     }
 

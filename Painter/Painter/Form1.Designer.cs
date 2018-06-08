@@ -52,7 +52,9 @@
             this.newLayer = new System.Windows.Forms.Button();
             this.eraseButton = new System.Windows.Forms.Button();
             this.opacityBar = new System.Windows.Forms.TrackBar();
+            this.eyeDropButton = new System.Windows.Forms.Button();
             this.panel = new Painter.DoubleBufferedPanel();
+            this.debug = new System.Windows.Forms.Label();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
@@ -278,22 +280,47 @@
             this.opacityBar.TabIndex = 10;
             this.opacityBar.Value = 255;
             // 
+            // eyeDropButton
+            // 
+            this.eyeDropButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.eyeDropButton.Location = new System.Drawing.Point(1065, 202);
+            this.eyeDropButton.Name = "eyeDropButton";
+            this.eyeDropButton.Size = new System.Drawing.Size(75, 23);
+            this.eyeDropButton.TabIndex = 11;
+            this.eyeDropButton.Text = "Eyedropper";
+            this.eyeDropButton.UseVisualStyleBackColor = true;
+            this.eyeDropButton.Click += new System.EventHandler(this.eyeDropButton_Click);
+            // 
             // panel
             // 
             this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel.AutoScroll = true;
-            this.panel.BackColor = System.Drawing.Color.Maroon;
+            this.panel.BackColor = System.Drawing.Color.White;
+            this.panel.Controls.Add(this.debug);
             this.panel.Controls.Add(this.pictureBox);
             this.panel.Location = new System.Drawing.Point(12, 43);
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(913, 736);
             this.panel.TabIndex = 2;
             this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
             this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
+            this.panel.MouseEnter += new System.EventHandler(this.panel_MouseEnter);
+            this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
             this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
             this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
+            // 
+            // debug
+            // 
+            this.debug.AutoSize = true;
+            this.debug.ForeColor = System.Drawing.Color.White;
+            this.debug.Location = new System.Drawing.Point(3, 713);
+            this.debug.Name = "debug";
+            this.debug.Size = new System.Drawing.Size(48, 17);
+            this.debug.TabIndex = 1;
+            this.debug.Text = "debug";
             // 
             // pictureBox
             // 
@@ -316,6 +343,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.eyeDropButton);
             this.Controls.Add(this.opacityBar);
             this.Controls.Add(this.eraseButton);
             this.Controls.Add(this.newLayer);
@@ -371,6 +399,8 @@
         private System.Windows.Forms.Button newLayer;
         private System.Windows.Forms.Button eraseButton;
         private System.Windows.Forms.TrackBar opacityBar;
+        private System.Windows.Forms.Button eyeDropButton;
+        private System.Windows.Forms.Label debug;
     }
 }
 
