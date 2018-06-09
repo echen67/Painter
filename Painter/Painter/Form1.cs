@@ -52,25 +52,26 @@ namespace Painter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Set up layers panel
-            layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers[0].MakeTransparent();
-            drawLayers.Insert(0, true);
+            //// Set up layers panel
+            //layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            //layers[0].MakeTransparent();
+            //drawLayers.Insert(0, true);
 
-            layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers[1].MakeTransparent();
-            drawLayers.Insert(1, true);
+            //layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            //layers[1].MakeTransparent();
+            //drawLayers.Insert(1, true);
 
-            temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            temp.MakeTransparent();
+            //temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            //temp.MakeTransparent();
 
-            layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
-            layerPanel.SetItemChecked(1, true);
-            layerPanel.SetSelected(1, true);        // set bottom layer to selected
+            //layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
+            //layerPanel.SetItemChecked(1, true);
+            //layerPanel.SetSelected(1, true);        // set bottom layer to selected
         }
 
         private void panel_Paint(object sender, PaintEventArgs e)
         {
+            //iterate through each layer and draw them
             int numItems = layerPanel.Items.Count;
             for (int i = 0; i < numItems; i++)
             {
@@ -80,6 +81,7 @@ namespace Painter
                 }
             }
 
+            // "temp" layer is for drawing line previews, etc
             e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
 
             // draw cursor as a circle, but not if eyedropper is selected
@@ -118,7 +120,7 @@ namespace Painter
 
                 pen.Color = Color.FromArgb(opacityBar.Value, fgColor);
                 pen.Width = brushSize;
-                testG = Graphics.FromImage(layers[activeLayer]);
+                testG = Graphics.FromImage(temp);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 //Pen eraser = new Pen(Color.FromArgb(0, fgColor), brushSize);
                 //testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
@@ -155,6 +157,22 @@ namespace Painter
         private void panel_MouseUp(object sender, MouseEventArgs e)
         {
             drawFlag = false;
+            if (toolSelected == 0)  // BRUSH
+            {
+                testG = Graphics.FromImage(temp);
+                testG.Clear(Color.Transparent);
+
+                pen.Color = Color.FromArgb(opacityBar.Value, fgColor);
+                pen.Width = brushSize;
+                Point[] pointsArr = points.ToArray<Point>();
+                if (pointsArr.Length >= 3)  // because error will occur otherwise
+                {
+                    testG = Graphics.FromImage(layers[activeLayer]);
+                    testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    testG.DrawCurve(pen, pointsArr);
+                }
+                panel.Refresh();
+            }
             if (toolSelected == 1)      // LINE
             {
                 pen.Color = fgColor;
@@ -168,36 +186,44 @@ namespace Painter
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox.Enabled = true;
-            pictureBox.Visible = true;
+            //pictureBox.Enabled = true;
+            //pictureBox.Visible = true;
 
-            pictureBox.BackColor = Color.White;
-            Bitmap bmp = new Bitmap(pictureBox.Width, pictureBox.Height);
-            pictureBox.Image = bmp;
-            G = Graphics.FromImage(bmp);
-            G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            pictureBox.DrawToBitmap(bmp, pictureBox.ClientRectangle);
+            //pictureBox.BackColor = Color.White;
+            //Bitmap bmp = new Bitmap(pictureBox.Width, pictureBox.Height);
+            //pictureBox.Image = bmp;
+            //G = Graphics.FromImage(bmp);
+            //G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            //pictureBox.DrawToBitmap(bmp, pictureBox.ClientRectangle);
 
             Form2 newDialog = new Form2();
-            Button ok = newDialog.Controls.Find("okButton", true).First() as Button;
+            if (newDialog.ShowDialog() == DialogResult.OK)
+            {
+                saveToolStripMenuItem.Enabled = true;
+                panel.Width = newDialog.getWidth();
+                panel.Height = newDialog.getHeight();
 
-            //Image img2 = new Bitmap(500, 500);
-            //pictureBox.Image = img2;
+                // Set up layers panel
+                layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+                layers[0].MakeTransparent();
+                drawLayers.Insert(0, true);
 
-            //Form newDialog = new Form();
-            //Button okButton = new Button();
-            //okButton.Text = "OK";
-            //newDialog.Controls.Add(okButton);
+                layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+                layers[1].MakeTransparent();
+                drawLayers.Insert(1, true);
 
-            //if (newDialog.ShowDialog(this) == DialogResult.OK)
-            //{
-            //    Image img = new Bitmap(500, 500);
-            //    pictureBox.Image = img;
-            //} else
-            //{
-            //    //
-            //}
-            //newDialog.Dispose();
+                temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                temp.MakeTransparent();
+
+                layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
+                layerPanel.SetItemChecked(1, true);
+                layerPanel.SetSelected(1, true);        // set bottom layer to selected
+
+                panel.Visible = true;
+                panel.Enabled = true;
+
+                newDialog.Close();
+            }
         }
 
         private void colorFG_Click(object sender, EventArgs e)
@@ -313,7 +339,15 @@ namespace Painter
             saveFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                pictureBox.Image.Save(saveFileDialog.FileName);
+                Bitmap merged = new Bitmap(layers[0]);
+                Graphics g = Graphics.FromImage(merged);
+                for (int i = 0; i < layers.Count; i++)
+                {
+                    g.DrawImageUnscaled(layers[i], 0, 0);
+                }
+                merged.Save(saveFileDialog.FileName);
+
+                //pictureBox.Image.Save(saveFileDialog.FileName);
             }
         }
 
@@ -365,16 +399,6 @@ namespace Painter
             toolSelected = 2;
         }
 
-        //private Color getColor(int x, int y)
-        //{
-        //    Bitmap bmp = new Bitmap(1, 1);
-        //    using (Graphics g = Graphics.FromImage(bmp))
-        //    {
-        //        g.CopyFromScreen(x, y, 0, 0, new Size(1, 1));
-        //    }
-        //    return bmp.GetPixel(0, 0);
-        //}
-
         private void eyeDropButton_Click(object sender, EventArgs e)
         {
             toolSelected = 3;
@@ -384,28 +408,10 @@ namespace Painter
         {
             if (toolSelected == 3)
             {
-                //Point pt = System.Windows.Forms.Cursor.Position;
-                //Color clr = getColor(pt.X, pt.Y);
-                //CaptureScreen();
-                //Point pt2 = PointToScreen(new Point(e.X, e.Y));
-                //Color clr = memoryImage.GetPixel(pt2.X, pt2.Y);
-                //colorFG.BackColor = clr;
-                //debug.Text = memoryImage.Width + ", " + memoryImage.Height;
-                //debug.Text = pt2.X + ", " + pt2.Y;
-
                 Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
                 colorFG.BackColor = clr;
             }
         }
-
-        //private void CaptureScreen()
-        //{
-        //    Graphics myGraphics = this.CreateGraphics();
-        //    Size s = this.Size;
-        //    memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
-        //    Graphics memoryGraphics = Graphics.FromImage(memoryImage);
-        //    memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
-        //}
 
         private void panel_MouseEnter(object sender, EventArgs e)
         {
@@ -418,6 +424,11 @@ namespace Painter
             Cursor.Show();
             paintCursor = false;
             panel.Refresh();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 
