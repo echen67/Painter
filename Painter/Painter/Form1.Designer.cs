@@ -53,14 +53,15 @@
             this.eraseButton = new System.Windows.Forms.Button();
             this.opacityBar = new System.Windows.Forms.TrackBar();
             this.eyeDropButton = new System.Windows.Forms.Button();
-            this.panel = new Painter.DoubleBufferedPanel();
+            this.panelContainer = new System.Windows.Forms.Panel();
             this.debug = new System.Windows.Forms.Label();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.rectButton = new System.Windows.Forms.Button();
+            this.panel = new Painter.DoubleBufferedPanel();
+            this.ellipseButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
-            this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.panelContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -293,18 +294,47 @@
             this.eyeDropButton.UseVisualStyleBackColor = true;
             this.eyeDropButton.Click += new System.EventHandler(this.eyeDropButton_Click);
             // 
-            // panel
+            // panelContainer
             // 
-            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.panelContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelContainer.AutoScroll = true;
+            this.panelContainer.BackColor = System.Drawing.SystemColors.Highlight;
+            this.panelContainer.Controls.Add(this.panel);
+            this.panelContainer.Location = new System.Drawing.Point(12, 43);
+            this.panelContainer.Name = "panelContainer";
+            this.panelContainer.Size = new System.Drawing.Size(920, 736);
+            this.panelContainer.TabIndex = 12;
+            // 
+            // debug
+            // 
+            this.debug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.debug.AutoSize = true;
+            this.debug.Location = new System.Drawing.Point(1071, 324);
+            this.debug.Name = "debug";
+            this.debug.Size = new System.Drawing.Size(48, 17);
+            this.debug.TabIndex = 13;
+            this.debug.Text = "debug";
+            // 
+            // rectButton
+            // 
+            this.rectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rectButton.Location = new System.Drawing.Point(1065, 231);
+            this.rectButton.Name = "rectButton";
+            this.rectButton.Size = new System.Drawing.Size(75, 23);
+            this.rectButton.TabIndex = 14;
+            this.rectButton.Text = "Rectangle";
+            this.rectButton.UseVisualStyleBackColor = true;
+            this.rectButton.Click += new System.EventHandler(this.rectButton_Click);
+            // 
+            // panel
+            // 
             this.panel.BackColor = System.Drawing.Color.White;
-            this.panel.Controls.Add(this.debug);
-            this.panel.Controls.Add(this.pictureBox);
             this.panel.Enabled = false;
-            this.panel.Location = new System.Drawing.Point(12, 43);
+            this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(913, 736);
+            this.panel.Size = new System.Drawing.Size(2000, 2000);
             this.panel.TabIndex = 2;
             this.panel.Visible = false;
             this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
@@ -315,30 +345,15 @@
             this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
             this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
             // 
-            // debug
+            // ellipseButton
             // 
-            this.debug.AutoSize = true;
-            this.debug.ForeColor = System.Drawing.Color.White;
-            this.debug.Location = new System.Drawing.Point(3, 713);
-            this.debug.Name = "debug";
-            this.debug.Size = new System.Drawing.Size(48, 17);
-            this.debug.TabIndex = 1;
-            this.debug.Text = "debug";
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pictureBox.Enabled = false;
-            this.pictureBox.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(500, 400);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.Visible = false;
-            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
-            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
-            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
+            this.ellipseButton.Location = new System.Drawing.Point(1065, 260);
+            this.ellipseButton.Name = "ellipseButton";
+            this.ellipseButton.Size = new System.Drawing.Size(75, 23);
+            this.ellipseButton.TabIndex = 15;
+            this.ellipseButton.Text = "Ellipse";
+            this.ellipseButton.UseVisualStyleBackColor = true;
+            this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
             // 
             // Form1
             // 
@@ -346,6 +361,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.ellipseButton);
+            this.Controls.Add(this.rectButton);
+            this.Controls.Add(this.debug);
             this.Controls.Add(this.eyeDropButton);
             this.Controls.Add(this.opacityBar);
             this.Controls.Add(this.eraseButton);
@@ -356,7 +374,7 @@
             this.Controls.Add(this.lineButton);
             this.Controls.Add(this.brushSizeBox);
             this.Controls.Add(this.brushButton);
-            this.Controls.Add(this.panel);
+            this.Controls.Add(this.panelContainer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -366,9 +384,7 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).EndInit();
-            this.panel.ResumeLayout(false);
-            this.panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.panelContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -397,13 +413,15 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.Button lineButton;
         private DoubleBufferedPanel panel;
-        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.CheckedListBox layerPanel;
         private System.Windows.Forms.Button newLayer;
         private System.Windows.Forms.Button eraseButton;
         private System.Windows.Forms.TrackBar opacityBar;
         private System.Windows.Forms.Button eyeDropButton;
+        private System.Windows.Forms.Panel panelContainer;
         private System.Windows.Forms.Label debug;
+        private System.Windows.Forms.Button rectButton;
+        private System.Windows.Forms.Button ellipseButton;
     }
 }
 

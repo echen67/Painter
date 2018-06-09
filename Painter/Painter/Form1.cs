@@ -14,9 +14,21 @@ namespace Painter
 {
     public partial class Form1 : Form
     {
+        // toolSelected
+        // 0 = Brush
+        // 1 = Line
+        // 2 = Eraser
+        // 3 = Eyedropper
+        // 4 = Rectangle
+        // 5 = Ellipse
+
         bool drawFlag = false;
         int[] xPos = new int[2];
         int[] yPos = new int[2];
+        int xDown;
+        int yDown;
+        int xUp;
+        int yUp;
         List<Point> points = new List<Point>();
         Graphics G;
         Color fgColor = Color.Black;
@@ -52,21 +64,7 @@ namespace Painter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //// Set up layers panel
-            //layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            //layers[0].MakeTransparent();
-            //drawLayers.Insert(0, true);
-
-            //layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            //layers[1].MakeTransparent();
-            //drawLayers.Insert(1, true);
-
-            //temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            //temp.MakeTransparent();
-
-            //layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
-            //layerPanel.SetItemChecked(1, true);
-            //layerPanel.SetSelected(1, true);        // set bottom layer to selected
+            //
         }
 
         private void panel_Paint(object sender, PaintEventArgs e)
@@ -101,6 +99,8 @@ namespace Painter
             xPos[1] = e.X;
             yPos[0] = e.Y;
             yPos[1] = e.Y;
+            xDown = e.X;
+            yDown = e.Y;
             points = new List<Point>();
             points.Add(new Point(e.X, e.Y));
         }
@@ -109,7 +109,7 @@ namespace Painter
         {
             mouseLoc = e.Location;
             panel.Refresh();
-            if (drawFlag == true && toolSelected == 0)      // BRUSH
+            if (drawFlag && toolSelected == 0)      // BRUSH
             {
                 xPos[0] = xPos[1];
                 xPos[1] = e.X;
@@ -129,7 +129,7 @@ namespace Painter
                 //testG.DrawLines(pen, pointsArr);
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
-            } else if (drawFlag == true && toolSelected == 1)   // LINE PREVIEW
+            } else if (drawFlag && toolSelected == 1)   // LINE PREVIEW
             {
                 pen.Color = fgColor;
                 pen.Width = brushSize;
@@ -138,7 +138,7 @@ namespace Painter
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
-            } else if (drawFlag == true && toolSelected == 2)   // ERASER
+            } else if (drawFlag && toolSelected == 2)   // ERASER
             {
                 xPos[0] = xPos[1];
                 xPos[1] = e.X;
@@ -151,12 +151,32 @@ namespace Painter
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
+            } else if (drawFlag && toolSelected == 4)   // RECTANGLE PREVIEW
+            {
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(temp);
+                testG.Clear(Color.Transparent);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawRectangle(pen, drawRect(xDown, yDown, e.X, e.Y));
+                panel.Refresh();
+            } else if (drawFlag && toolSelected == 5)   // ELLIPSE PREVIEW
+            {
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(temp);
+                testG.Clear(Color.Transparent);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawEllipse(pen, drawRect(xDown, yDown, e.X, e.Y));
+                panel.Refresh();
             }
         }
 
         private void panel_MouseUp(object sender, MouseEventArgs e)
         {
             drawFlag = false;
+            xUp = e.X;
+            yUp = e.Y;
             if (toolSelected == 0)  // BRUSH
             {
                 testG = Graphics.FromImage(temp);
@@ -182,48 +202,81 @@ namespace Painter
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
             }
+            if (toolSelected == 4)      // RECTANGLE
+            {
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(layers[activeLayer]);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawRectangle(pen, drawRect(xDown, yDown, xUp, yUp));
+                panel.Refresh();
+            }
+            if (toolSelected == 5)      // ELLIPSE
+            {
+                pen.Color = fgColor;
+                pen.Width = brushSize;
+                testG = Graphics.FromImage(layers[activeLayer]);
+                testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.DrawEllipse(pen, drawRect(xDown, yDown, xUp, yUp));
+                panel.Refresh();
+            }
+        }
+
+        private Rectangle drawRect(int xDown, int yDown, int xUp, int yUp)
+        {
+            Rectangle rect = new Rectangle();
+            if (xDown < xUp && yDown < yUp)
+            {
+                rect = new Rectangle(xDown, yDown, xUp - xDown, yUp - yDown);
+            }
+            else if (xDown < xUp && yDown > yUp)
+            {
+                rect = new Rectangle(xDown, yUp, xUp - xDown, yDown - yUp);
+            }
+            else if (xDown > xUp && yDown > yUp)
+            {
+                rect = new Rectangle(xUp, yUp, xDown - xUp, yDown - yUp);
+            }
+            else if (xDown > xUp && yDown < yUp)
+            {
+                rect = new Rectangle(xUp, yDown, xDown - xUp, yUp - yDown);
+            }
+            return rect;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //pictureBox.Enabled = true;
-            //pictureBox.Visible = true;
-
-            //pictureBox.BackColor = Color.White;
-            //Bitmap bmp = new Bitmap(pictureBox.Width, pictureBox.Height);
-            //pictureBox.Image = bmp;
-            //G = Graphics.FromImage(bmp);
-            //G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            //pictureBox.DrawToBitmap(bmp, pictureBox.ClientRectangle);
-
             Form2 newDialog = new Form2();
             if (newDialog.ShowDialog() == DialogResult.OK)
             {
                 saveToolStripMenuItem.Enabled = true;
                 panel.Width = newDialog.getWidth();
                 panel.Height = newDialog.getHeight();
-
-                // Set up layers panel
-                layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-                layers[0].MakeTransparent();
-                drawLayers.Insert(0, true);
-
-                layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-                layers[1].MakeTransparent();
-                drawLayers.Insert(1, true);
-
-                temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                temp.MakeTransparent();
-
-                layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
-                layerPanel.SetItemChecked(1, true);
-                layerPanel.SetSelected(1, true);        // set bottom layer to selected
-
+                setUpLayers();
                 panel.Visible = true;
                 panel.Enabled = true;
 
                 newDialog.Close();
             }
+        }
+
+        private void setUpLayers()
+        {
+            // Set up layers panel
+            layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[0].MakeTransparent();
+            drawLayers.Insert(0, true);
+
+            layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[1].MakeTransparent();
+            drawLayers.Insert(1, true);
+
+            temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            temp.MakeTransparent();
+
+            layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
+            layerPanel.SetItemChecked(1, true);
+            layerPanel.SetSelected(1, true);        // set bottom layer to selected
         }
 
         private void colorFG_Click(object sender, EventArgs e)
@@ -250,7 +303,15 @@ namespace Painter
                         using (myStream)
                         {
                             Image img = Image.FromStream(myStream);
-                            pictureBox.Image = img;
+                            panel.Width = img.Width;
+                            panel.Height = img.Height;
+                            setUpLayers();
+                            layers[0] = new Bitmap(img);
+                            panel.Enabled = true;
+                            panel.Visible = true;       // panel paint called
+                            //debug.Text = panel.Width + ", " + panel.Height;
+                            //debug.Text = panelContainer.Width + ", " + panelContainer.Height;
+                            //layers[0] = new Bitmap(img);
                         }
                     }
                 } catch (Exception ex)
@@ -262,71 +323,52 @@ namespace Painter
 
         private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox.Size = panel.Size;
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.Dock = DockStyle.Fill;
+            //pictureBox.Size = panel.Size;
+            //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            //pictureBox.Dock = DockStyle.Fill;
+            Graphics g;
+            for (int i = 0; i < layers.Count; i++)
+            {
+                g = Graphics.FromImage(layers[i]);
+                int widthDiff = Math.Abs(panel.Width - panelContainer.Width);
+                int heightDiff = Math.Abs(panel.Height - panelContainer.Height);
+                if (widthDiff > heightDiff)
+                {
+                    float oldWidth = panel.Width;
+                    float oldHeight = panel.Height;
+                    panel.Width = panelContainer.Width;
+                    panel.Height = (int)((panelContainer.Width / oldWidth) * oldHeight);
+                    debug.Text = panel.Width + ", " + panel.Height;
+                } else
+                {
+                    //panel.Height = panelContainer.Height;
+                    //panel.Width = (panelContainer.Height / panel.Height) * panel.Width;
+                }
+                g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
+            }
         }
 
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox.Height += 50;
-            pictureBox.Width += 50;
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.Dock = DockStyle.None;
+            //pictureBox.Height += 50;
+            //pictureBox.Width += 50;
+            //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            //pictureBox.Dock = DockStyle.None;
         }
 
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox.Height -= 50;
-            pictureBox.Width -= 50;
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.Dock = DockStyle.None;
+            //pictureBox.Height -= 50;
+            //pictureBox.Width -= 50;
+            //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            //pictureBox.Dock = DockStyle.None;
         }
 
         private void actualToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+            //pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
             panel.AutoScroll = true;
-            pictureBox.Dock = DockStyle.None;
-        }
-
-        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            drawFlag = true;
-            xPos[0] = e.X;
-            xPos[1] = e.X;
-            yPos[0] = e.Y;
-            yPos[1] = e.Y;
-            //G.FillEllipse(new SolidBrush(Color.Black), e.X, e.Y, brushSize, brushSize);
-        }
-
-        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (drawFlag == true && toolSelected == 0)
-            {
-                xPos[0] = xPos[1];
-                xPos[1] = e.X;
-                yPos[0] = yPos[1];
-                yPos[1] = e.Y;
-                pen.Color = fgColor;
-                pen.Width = brushSize;
-                G.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
-                pictureBox.Refresh();
-            } else if (toolSelected == 1)
-            {
-                //
-            }
-        }
-
-        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
-        {
-            drawFlag = false;
-            if (toolSelected == 1)
-            {
-                Pen pen = new Pen(fgColor, brushSize);
-                G.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
-                pictureBox.Refresh();
-            }
+            //pictureBox.Dock = DockStyle.None;
         }
 
         private void brushSizeBox_ValueChanged(object sender, EventArgs e)
@@ -429,6 +471,16 @@ namespace Painter
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void rectButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 4;
+        }
+
+        private void ellipseButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 5;
         }
     }
 
