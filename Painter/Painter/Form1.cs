@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections;
+using System.Windows.Input;
 
 namespace Painter
 {
@@ -158,7 +159,13 @@ namespace Painter
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                testG.DrawRectangle(pen, drawRect(xDown, yDown, e.X, e.Y));
+                if (Control.ModifierKeys == Keys.Shift)
+                {
+                    testG.DrawRectangle(pen, drawSq(xDown, yDown, e.X, e.Y));
+                } else
+                {
+                    testG.DrawRectangle(pen, drawRect(xDown, yDown, e.X, e.Y));
+                }
                 panel.Refresh();
             } else if (drawFlag && toolSelected == 5)   // ELLIPSE PREVIEW
             {
@@ -167,7 +174,13 @@ namespace Painter
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                testG.DrawEllipse(pen, drawRect(xDown, yDown, e.X, e.Y));
+                if (Control.ModifierKeys == Keys.Shift)
+                {
+                    testG.DrawEllipse(pen, drawSq(xDown, yDown, e.X, e.Y));
+                } else
+                {
+                    testG.DrawEllipse(pen, drawRect(xDown, yDown, e.X, e.Y));
+                }
                 panel.Refresh();
             }
         }
@@ -208,8 +221,15 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                testG.DrawRectangle(pen, drawRect(xDown, yDown, xUp, yUp));
-                panel.Refresh();
+                if (Control.ModifierKeys == Keys.Shift)
+                {
+                    testG.DrawRectangle(pen, drawSq(xDown, yDown, xUp, yUp));
+                    panel.Refresh();
+                } else
+                {
+                    testG.DrawRectangle(pen, drawRect(xDown, yDown, xUp, yUp));
+                    panel.Refresh();
+                }
             }
             if (toolSelected == 5)      // ELLIPSE
             {
@@ -217,11 +237,21 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                testG.DrawEllipse(pen, drawRect(xDown, yDown, xUp, yUp));
-                panel.Refresh();
+                if (Control.ModifierKeys == Keys.Shift)
+                {
+                    testG.DrawEllipse(pen, drawSq(xDown, yDown, xUp, yUp));
+                    panel.Refresh();
+                } else
+                {
+                    testG.DrawEllipse(pen, drawRect(xDown, yDown, xUp, yUp));
+                    panel.Refresh();
+                }
             }
+            testG = Graphics.FromImage(temp);
+            testG.Clear(Color.Transparent);
         }
 
+        // Custom method created to draw rectangles and ellipses more easily
         private Rectangle drawRect(int xDown, int yDown, int xUp, int yUp)
         {
             Rectangle rect = new Rectangle();
@@ -240,6 +270,38 @@ namespace Painter
             else if (xDown > xUp && yDown < yUp)
             {
                 rect = new Rectangle(xUp, yDown, xDown - xUp, yUp - yDown);
+            }
+            return rect;
+        }
+
+        // Custom method created to help draw squares and circles
+        private Rectangle drawSq(int xDown, int yDown, int xUp, int yUp)
+        {
+            Rectangle rect = new Rectangle();
+            int width = Math.Abs(xUp - xDown);
+            int height = Math.Abs(yUp - yDown);
+            if (width > height)
+            {
+                width = height;
+            } else
+            {
+                height = width;
+            }
+            if (xDown < xUp && yDown < yUp)
+            {
+                rect = new Rectangle(xDown, yDown, width, height);
+            }
+            else if (xDown < xUp && yDown > yUp)
+            {
+                rect = new Rectangle(xDown, yDown-height, width, height);
+            }
+            else if (xDown > xUp && yDown > yUp)
+            {
+                rect = new Rectangle(xDown-width, yDown-height, width, height);
+            }
+            else if (xDown > xUp && yDown < yUp)
+            {
+                rect = new Rectangle(xDown-width, yDown, width, height);
             }
             return rect;
         }
@@ -323,9 +385,6 @@ namespace Painter
 
         private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //pictureBox.Size = panel.Size;
-            //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            //pictureBox.Dock = DockStyle.Fill;
             Graphics g;
             for (int i = 0; i < layers.Count; i++)
             {

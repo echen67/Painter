@@ -56,8 +56,8 @@
             this.panelContainer = new System.Windows.Forms.Panel();
             this.debug = new System.Windows.Forms.Label();
             this.rectButton = new System.Windows.Forms.Button();
-            this.panel = new Painter.DoubleBufferedPanel();
             this.ellipseButton = new System.Windows.Forms.Button();
+            this.panel = new Painter.DoubleBufferedPanel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
@@ -300,7 +300,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelContainer.AutoScroll = true;
-            this.panelContainer.BackColor = System.Drawing.SystemColors.Highlight;
+            this.panelContainer.BackColor = System.Drawing.Color.Transparent;
             this.panelContainer.Controls.Add(this.panel);
             this.panelContainer.Location = new System.Drawing.Point(12, 43);
             this.panelContainer.Name = "panelContainer";
@@ -328,6 +328,17 @@
             this.rectButton.UseVisualStyleBackColor = true;
             this.rectButton.Click += new System.EventHandler(this.rectButton_Click);
             // 
+            // ellipseButton
+            // 
+            this.ellipseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ellipseButton.Location = new System.Drawing.Point(1065, 260);
+            this.ellipseButton.Name = "ellipseButton";
+            this.ellipseButton.Size = new System.Drawing.Size(75, 23);
+            this.ellipseButton.TabIndex = 15;
+            this.ellipseButton.Text = "Ellipse";
+            this.ellipseButton.UseVisualStyleBackColor = true;
+            this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
+            // 
             // panel
             // 
             this.panel.BackColor = System.Drawing.Color.White;
@@ -344,16 +355,6 @@
             this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
             this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
             this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
-            // 
-            // ellipseButton
-            // 
-            this.ellipseButton.Location = new System.Drawing.Point(1065, 260);
-            this.ellipseButton.Name = "ellipseButton";
-            this.ellipseButton.Size = new System.Drawing.Size(75, 23);
-            this.ellipseButton.TabIndex = 15;
-            this.ellipseButton.Text = "Ellipse";
-            this.ellipseButton.UseVisualStyleBackColor = true;
-            this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
             // 
             // Form1
             // 
