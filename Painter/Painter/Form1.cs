@@ -33,6 +33,7 @@ namespace Painter
         List<Point> points = new List<Point>();
         Graphics G;
         Color fgColor = Color.Black;
+        Color bgColor = Color.White;
         int brushSize = 1;
         int toolSelected = 0;
         Pen pen;
@@ -61,6 +62,8 @@ namespace Painter
 
             this.DoubleBuffered = true;
             DoubleBuffered = true;
+
+            colorBG.Click += new EventHandler(colorBG_Click);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -306,6 +309,7 @@ namespace Painter
             return rect;
         }
 
+        // Opens up Form2 to create new image
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form2 newDialog = new Form2();
@@ -351,6 +355,26 @@ namespace Painter
             }
         }
 
+        private void colorBG_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog.ShowDialog();
+            if (result.Equals(DialogResult.OK))
+            {
+                colorBG.BackColor = colorDialog.Color;
+                bgColor = colorDialog.Color;
+            }
+        }
+
+        private void switchButton_Click(object sender, EventArgs e)
+        {
+            Color temp = fgColor;
+            fgColor = bgColor;
+            bgColor = temp;
+            colorFG.BackColor = fgColor;
+            colorBG.BackColor = bgColor;
+        }
+
+        // Open Existing Image
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
@@ -383,26 +407,33 @@ namespace Painter
             }
         }
 
+        // Fit image to screen
         private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Graphics g;
             for (int i = 0; i < layers.Count; i++)
             {
                 g = Graphics.FromImage(layers[i]);
-                int widthDiff = Math.Abs(panel.Width - panelContainer.Width);
-                int heightDiff = Math.Abs(panel.Height - panelContainer.Height);
+
+                int widthDiff = panel.Width - panelContainer.Width;
+                int heightDiff = panel.Height - panelContainer.Height;
                 if (widthDiff > heightDiff)
                 {
-                    float oldWidth = panel.Width;
-                    float oldHeight = panel.Height;
-                    panel.Width = panelContainer.Width;
-                    panel.Height = (int)((panelContainer.Width / oldWidth) * oldHeight);
-                    debug.Text = panel.Width + ", " + panel.Height;
-                } else
-                {
-                    //panel.Height = panelContainer.Height;
-                    //panel.Width = (panelContainer.Height / panel.Height) * panel.Width;
+                    float factor = ((float)panelContainer.Width) / panel.Width;
+                    float newWidth = panelContainer.Width;
+                    float newHeight = panel.Height * factor;
+                    panel.Width = (int)newWidth;
+                    panel.Height = (int)newHeight;
                 }
+                else
+                {
+                    float factor = ((float)panelContainer.Height) / panel.Height;
+                    float newWidth = panel.Width * factor;
+                    float newHeight = panelContainer.Height;
+                    panel.Width = (int)newWidth;
+                    panel.Height = (int)newHeight;
+                }
+
                 g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
             }
         }

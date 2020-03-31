@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,7 @@
             this.colorFG = new System.Windows.Forms.Button();
             this.brushSizeBox = new System.Windows.Forms.NumericUpDown();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.colorBG = new System.Windows.Forms.Button();
             this.brushButton = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.lineButton = new System.Windows.Forms.Button();
@@ -54,10 +55,10 @@
             this.opacityBar = new System.Windows.Forms.TrackBar();
             this.eyeDropButton = new System.Windows.Forms.Button();
             this.panelContainer = new System.Windows.Forms.Panel();
-            this.debug = new System.Windows.Forms.Label();
+            this.panel = new Painter.DoubleBufferedPanel();
             this.rectButton = new System.Windows.Forms.Button();
             this.ellipseButton = new System.Windows.Forms.Button();
-            this.panel = new Painter.DoubleBufferedPanel();
+            this.switchButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
@@ -169,7 +170,7 @@
             this.colorFG.Cursor = System.Windows.Forms.Cursors.Hand;
             this.colorFG.FlatAppearance.BorderSize = 0;
             this.colorFG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.colorFG.Location = new System.Drawing.Point(1065, 362);
+            this.colorFG.Location = new System.Drawing.Point(1021, 267);
             this.colorFG.Margin = new System.Windows.Forms.Padding(0);
             this.colorFG.Name = "colorFG";
             this.colorFG.Size = new System.Drawing.Size(40, 40);
@@ -181,14 +182,14 @@
             // 
             this.brushSizeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.brushSizeBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.brushSizeBox.Location = new System.Drawing.Point(1065, 72);
+            this.brushSizeBox.Location = new System.Drawing.Point(972, 138);
             this.brushSizeBox.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.brushSizeBox.Name = "brushSizeBox";
-            this.brushSizeBox.Size = new System.Drawing.Size(75, 22);
+            this.brushSizeBox.Size = new System.Drawing.Size(61, 22);
             this.brushSizeBox.TabIndex = 6;
             this.brushSizeBox.Value = new decimal(new int[] {
             1,
@@ -201,40 +202,45 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
-            // button1
+            // colorBG
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.BackColor = System.Drawing.Color.White;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(1079, 378);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(40, 40);
-            this.button1.TabIndex = 3;
-            this.button1.UseVisualStyleBackColor = false;
+            this.colorBG.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.colorBG.BackColor = System.Drawing.Color.White;
+            this.colorBG.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.colorBG.FlatAppearance.BorderSize = 0;
+            this.colorBG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colorBG.Location = new System.Drawing.Point(1035, 282);
+            this.colorBG.Margin = new System.Windows.Forms.Padding(0);
+            this.colorBG.Name = "colorBG";
+            this.colorBG.Size = new System.Drawing.Size(40, 40);
+            this.colorBG.TabIndex = 3;
+            this.colorBG.UseVisualStyleBackColor = false;
             // 
             // brushButton
             // 
             this.brushButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.brushButton.Location = new System.Drawing.Point(1065, 43);
+            this.brushButton.BackColor = System.Drawing.Color.Transparent;
+            this.brushButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("brushButton.BackgroundImage")));
+            this.brushButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.brushButton.Location = new System.Drawing.Point(963, 60);
+            this.brushButton.Margin = new System.Windows.Forms.Padding(5);
             this.brushButton.Name = "brushButton";
-            this.brushButton.Size = new System.Drawing.Size(75, 23);
+            this.brushButton.Size = new System.Drawing.Size(50, 50);
             this.brushButton.TabIndex = 4;
-            this.brushButton.Text = "Brush";
-            this.brushButton.UseVisualStyleBackColor = true;
+            this.brushButton.UseVisualStyleBackColor = false;
             this.brushButton.Click += new System.EventHandler(this.brushButton_Click);
             // 
             // lineButton
             // 
             this.lineButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lineButton.Location = new System.Drawing.Point(1065, 100);
+            this.lineButton.BackColor = System.Drawing.Color.Transparent;
+            this.lineButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("lineButton.BackgroundImage")));
+            this.lineButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.lineButton.Location = new System.Drawing.Point(963, 188);
             this.lineButton.Name = "lineButton";
-            this.lineButton.Size = new System.Drawing.Size(75, 23);
+            this.lineButton.Size = new System.Drawing.Size(50, 50);
             this.lineButton.TabIndex = 7;
-            this.lineButton.Text = "Line";
-            this.lineButton.UseVisualStyleBackColor = true;
+            this.lineButton.UseVisualStyleBackColor = false;
             this.lineButton.Click += new System.EventHandler(this.lineButton_Click);
             // 
             // layerPanel
@@ -244,9 +250,9 @@
             this.layerPanel.Items.AddRange(new object[] {
             "Layer1",
             "Layer0"});
-            this.layerPanel.Location = new System.Drawing.Point(951, 627);
+            this.layerPanel.Location = new System.Drawing.Point(951, 355);
             this.layerPanel.Name = "layerPanel";
-            this.layerPanel.Size = new System.Drawing.Size(190, 123);
+            this.layerPanel.Size = new System.Drawing.Size(190, 395);
             this.layerPanel.TabIndex = 1;
             this.layerPanel.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.layerPanel_ItemCheck);
             this.layerPanel.SelectedIndexChanged += new System.EventHandler(this.layerPanel_SelectedIndexChanged);
@@ -256,41 +262,46 @@
             this.newLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.newLayer.Location = new System.Drawing.Point(951, 756);
             this.newLayer.Name = "newLayer";
-            this.newLayer.Size = new System.Drawing.Size(75, 23);
+            this.newLayer.Size = new System.Drawing.Size(110, 23);
             this.newLayer.TabIndex = 8;
-            this.newLayer.Text = "New";
+            this.newLayer.Text = "New Layer";
             this.newLayer.UseVisualStyleBackColor = true;
             this.newLayer.Click += new System.EventHandler(this.newLayer_Click);
             // 
             // eraseButton
             // 
             this.eraseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.eraseButton.Location = new System.Drawing.Point(1065, 129);
+            this.eraseButton.BackColor = System.Drawing.Color.Transparent;
+            this.eraseButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("eraseButton.BackgroundImage")));
+            this.eraseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eraseButton.Location = new System.Drawing.Point(1021, 60);
             this.eraseButton.Name = "eraseButton";
-            this.eraseButton.Size = new System.Drawing.Size(75, 23);
+            this.eraseButton.Size = new System.Drawing.Size(50, 50);
             this.eraseButton.TabIndex = 9;
-            this.eraseButton.Text = "Eraser";
-            this.eraseButton.UseVisualStyleBackColor = true;
+            this.eraseButton.UseMnemonic = false;
+            this.eraseButton.UseVisualStyleBackColor = false;
             this.eraseButton.Click += new System.EventHandler(this.eraseButton_Click);
             // 
             // opacityBar
             // 
             this.opacityBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.opacityBar.Location = new System.Drawing.Point(1052, 158);
+            this.opacityBar.Location = new System.Drawing.Point(1039, 126);
             this.opacityBar.Maximum = 255;
             this.opacityBar.Name = "opacityBar";
-            this.opacityBar.Size = new System.Drawing.Size(104, 56);
+            this.opacityBar.Size = new System.Drawing.Size(91, 56);
             this.opacityBar.TabIndex = 10;
             this.opacityBar.Value = 255;
             // 
             // eyeDropButton
             // 
             this.eyeDropButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.eyeDropButton.Location = new System.Drawing.Point(1065, 202);
+            this.eyeDropButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("eyeDropButton.BackgroundImage")));
+            this.eyeDropButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eyeDropButton.Location = new System.Drawing.Point(1077, 60);
             this.eyeDropButton.Name = "eyeDropButton";
-            this.eyeDropButton.Size = new System.Drawing.Size(75, 23);
+            this.eyeDropButton.Size = new System.Drawing.Size(50, 50);
             this.eyeDropButton.TabIndex = 11;
-            this.eyeDropButton.Text = "Eyedropper";
+            this.eyeDropButton.UseMnemonic = false;
             this.eyeDropButton.UseVisualStyleBackColor = true;
             this.eyeDropButton.Click += new System.EventHandler(this.eyeDropButton_Click);
             // 
@@ -306,38 +317,6 @@
             this.panelContainer.Name = "panelContainer";
             this.panelContainer.Size = new System.Drawing.Size(920, 736);
             this.panelContainer.TabIndex = 12;
-            // 
-            // debug
-            // 
-            this.debug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.debug.AutoSize = true;
-            this.debug.Location = new System.Drawing.Point(1071, 324);
-            this.debug.Name = "debug";
-            this.debug.Size = new System.Drawing.Size(48, 17);
-            this.debug.TabIndex = 13;
-            this.debug.Text = "debug";
-            // 
-            // rectButton
-            // 
-            this.rectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.rectButton.Location = new System.Drawing.Point(1065, 231);
-            this.rectButton.Name = "rectButton";
-            this.rectButton.Size = new System.Drawing.Size(75, 23);
-            this.rectButton.TabIndex = 14;
-            this.rectButton.Text = "Rectangle";
-            this.rectButton.UseVisualStyleBackColor = true;
-            this.rectButton.Click += new System.EventHandler(this.rectButton_Click);
-            // 
-            // ellipseButton
-            // 
-            this.ellipseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ellipseButton.Location = new System.Drawing.Point(1065, 260);
-            this.ellipseButton.Name = "ellipseButton";
-            this.ellipseButton.Size = new System.Drawing.Size(75, 23);
-            this.ellipseButton.TabIndex = 15;
-            this.ellipseButton.Text = "Ellipse";
-            this.ellipseButton.UseVisualStyleBackColor = true;
-            this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
             // 
             // panel
             // 
@@ -356,24 +335,63 @@
             this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
             this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
             // 
+            // rectButton
+            // 
+            this.rectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rectButton.BackColor = System.Drawing.Color.Transparent;
+            this.rectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rectButton.BackgroundImage")));
+            this.rectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.rectButton.Location = new System.Drawing.Point(1021, 188);
+            this.rectButton.Name = "rectButton";
+            this.rectButton.Size = new System.Drawing.Size(50, 50);
+            this.rectButton.TabIndex = 14;
+            this.rectButton.UseVisualStyleBackColor = false;
+            this.rectButton.Click += new System.EventHandler(this.rectButton_Click);
+            // 
+            // ellipseButton
+            // 
+            this.ellipseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ellipseButton.BackColor = System.Drawing.Color.Transparent;
+            this.ellipseButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ellipseButton.BackgroundImage")));
+            this.ellipseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ellipseButton.Location = new System.Drawing.Point(1077, 188);
+            this.ellipseButton.Name = "ellipseButton";
+            this.ellipseButton.Size = new System.Drawing.Size(50, 50);
+            this.ellipseButton.TabIndex = 15;
+            this.ellipseButton.UseVisualStyleBackColor = false;
+            this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
+            // 
+            // switchButton
+            // 
+            this.switchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.switchButton.BackColor = System.Drawing.Color.Transparent;
+            this.switchButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("switchButton.BackgroundImage")));
+            this.switchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.switchButton.Location = new System.Drawing.Point(988, 297);
+            this.switchButton.Name = "switchButton";
+            this.switchButton.Size = new System.Drawing.Size(25, 25);
+            this.switchButton.TabIndex = 7;
+            this.switchButton.UseVisualStyleBackColor = false;
+            this.switchButton.Click += new System.EventHandler(this.switchButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1156, 799);
+            this.Controls.Add(this.opacityBar);
+            this.Controls.Add(this.brushSizeBox);
             this.Controls.Add(this.ellipseButton);
             this.Controls.Add(this.rectButton);
-            this.Controls.Add(this.debug);
             this.Controls.Add(this.eyeDropButton);
-            this.Controls.Add(this.opacityBar);
             this.Controls.Add(this.eraseButton);
             this.Controls.Add(this.newLayer);
             this.Controls.Add(this.layerPanel);
             this.Controls.Add(this.colorFG);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.colorBG);
+            this.Controls.Add(this.switchButton);
             this.Controls.Add(this.lineButton);
-            this.Controls.Add(this.brushSizeBox);
             this.Controls.Add(this.brushButton);
             this.Controls.Add(this.panelContainer);
             this.Controls.Add(this.menuStrip1);
@@ -400,7 +418,6 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.Button colorFG;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
@@ -408,7 +425,7 @@
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fitToScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actualToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button colorBG;
         private System.Windows.Forms.Button brushButton;
         private System.Windows.Forms.NumericUpDown brushSizeBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
@@ -420,9 +437,10 @@
         private System.Windows.Forms.TrackBar opacityBar;
         private System.Windows.Forms.Button eyeDropButton;
         private System.Windows.Forms.Panel panelContainer;
-        private System.Windows.Forms.Label debug;
         private System.Windows.Forms.Button rectButton;
         private System.Windows.Forms.Button ellipseButton;
+        private System.Windows.Forms.Button colorFG;
+        private System.Windows.Forms.Button switchButton;
     }
 }
 
