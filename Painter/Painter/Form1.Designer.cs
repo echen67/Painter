@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -59,6 +60,7 @@
             this.rectButton = new System.Windows.Forms.Button();
             this.ellipseButton = new System.Windows.Forms.Button();
             this.switchButton = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
@@ -191,6 +193,7 @@
             this.brushSizeBox.Name = "brushSizeBox";
             this.brushSizeBox.Size = new System.Drawing.Size(61, 22);
             this.brushSizeBox.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.brushSizeBox, "Brush Size");
             this.brushSizeBox.Value = new decimal(new int[] {
             1,
             0,
@@ -227,6 +230,7 @@
             this.brushButton.Name = "brushButton";
             this.brushButton.Size = new System.Drawing.Size(50, 50);
             this.brushButton.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.brushButton, "Brush");
             this.brushButton.UseVisualStyleBackColor = false;
             this.brushButton.Click += new System.EventHandler(this.brushButton_Click);
             // 
@@ -240,6 +244,7 @@
             this.lineButton.Name = "lineButton";
             this.lineButton.Size = new System.Drawing.Size(50, 50);
             this.lineButton.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.lineButton, "Line Tool");
             this.lineButton.UseVisualStyleBackColor = false;
             this.lineButton.Click += new System.EventHandler(this.lineButton_Click);
             // 
@@ -278,6 +283,7 @@
             this.eraseButton.Name = "eraseButton";
             this.eraseButton.Size = new System.Drawing.Size(50, 50);
             this.eraseButton.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.eraseButton, "Eraser");
             this.eraseButton.UseMnemonic = false;
             this.eraseButton.UseVisualStyleBackColor = false;
             this.eraseButton.Click += new System.EventHandler(this.eraseButton_Click);
@@ -290,6 +296,7 @@
             this.opacityBar.Name = "opacityBar";
             this.opacityBar.Size = new System.Drawing.Size(91, 56);
             this.opacityBar.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.opacityBar, "Brush Opacity");
             this.opacityBar.Value = 255;
             // 
             // eyeDropButton
@@ -301,6 +308,7 @@
             this.eyeDropButton.Name = "eyeDropButton";
             this.eyeDropButton.Size = new System.Drawing.Size(50, 50);
             this.eyeDropButton.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.eyeDropButton, "Eyedropper");
             this.eyeDropButton.UseMnemonic = false;
             this.eyeDropButton.UseVisualStyleBackColor = true;
             this.eyeDropButton.Click += new System.EventHandler(this.eyeDropButton_Click);
@@ -345,6 +353,7 @@
             this.rectButton.Name = "rectButton";
             this.rectButton.Size = new System.Drawing.Size(50, 50);
             this.rectButton.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.rectButton, "Rectangle Tool");
             this.rectButton.UseVisualStyleBackColor = false;
             this.rectButton.Click += new System.EventHandler(this.rectButton_Click);
             // 
@@ -358,6 +367,7 @@
             this.ellipseButton.Name = "ellipseButton";
             this.ellipseButton.Size = new System.Drawing.Size(50, 50);
             this.ellipseButton.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.ellipseButton, "Ellipse Tool");
             this.ellipseButton.UseVisualStyleBackColor = false;
             this.ellipseButton.Click += new System.EventHandler(this.ellipseButton_Click);
             // 
@@ -371,6 +381,7 @@
             this.switchButton.Name = "switchButton";
             this.switchButton.Size = new System.Drawing.Size(25, 25);
             this.switchButton.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.switchButton, "Switch Foreground and Background");
             this.switchButton.UseVisualStyleBackColor = false;
             this.switchButton.Click += new System.EventHandler(this.switchButton_Click);
             // 
@@ -441,6 +452,7 @@
         private System.Windows.Forms.Button ellipseButton;
         private System.Windows.Forms.Button colorFG;
         private System.Windows.Forms.Button switchButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

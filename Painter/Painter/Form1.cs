@@ -64,6 +64,10 @@ namespace Painter
             DoubleBuffered = true;
 
             colorBG.Click += new EventHandler(colorBG_Click);
+
+            // Hide layer stuff until new image is created or opened
+            layerPanel.Visible = false;
+            newLayer.Visible = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -323,6 +327,9 @@ namespace Painter
                 panel.Enabled = true;
 
                 newDialog.Close();
+
+                layerPanel.Visible = true;
+                newLayer.Visible = true;
             }
         }
 
@@ -345,6 +352,7 @@ namespace Painter
             layerPanel.SetSelected(1, true);        // set bottom layer to selected
         }
 
+        // Set foreground color
         private void colorFG_Click(object sender, EventArgs e)
         {
             DialogResult result = colorDialog.ShowDialog();
@@ -355,6 +363,7 @@ namespace Painter
             }
         }
 
+        // Set background color
         private void colorBG_Click(object sender, EventArgs e)
         {
             DialogResult result = colorDialog.ShowDialog();
@@ -365,6 +374,7 @@ namespace Painter
             }
         }
 
+        // Switch foreground and background colors
         private void switchButton_Click(object sender, EventArgs e)
         {
             Color temp = fgColor;
@@ -374,7 +384,7 @@ namespace Painter
             colorBG.BackColor = bgColor;
         }
 
-        // Open Existing Image
+        // Open existing image
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
@@ -399,6 +409,8 @@ namespace Painter
                             //debug.Text = panelContainer.Width + ", " + panelContainer.Height;
                             //layers[0] = new Bitmap(img);
                         }
+                        layerPanel.Visible = true;
+                        newLayer.Visible = true;
                     }
                 } catch (Exception ex)
                 {
@@ -435,6 +447,7 @@ namespace Painter
                 }
 
                 g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
+                //panel.Refresh();
             }
         }
 
@@ -466,6 +479,7 @@ namespace Painter
             brushSize = Decimal.ToInt32(brushSizeBox.Value);
         }
 
+        // Save image
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
@@ -512,6 +526,7 @@ namespace Painter
             activeLayer = layerPanel.Items.Count - 1 - activeLayer;
         }
 
+        // Create new layer
         private void newLayer_Click(object sender, EventArgs e)
         {
             layerPanel.Items.Insert(0, "Layer");
@@ -538,10 +553,12 @@ namespace Painter
 
         private void panel_MouseClick(object sender, MouseEventArgs e)
         {
+            // Eyedropper
             if (toolSelected == 3)
             {
                 Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
                 colorFG.BackColor = clr;
+                fgColor = clr;
             }
         }
 
