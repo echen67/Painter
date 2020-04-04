@@ -446,7 +446,24 @@ namespace Painter
                     panel.Height = (int)newHeight;
                 }
 
-                g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
+                // Resize temp layer (which is a bitmap)
+                Bitmap newTemp = new Bitmap(panel.Width, panel.Height);
+                using (Graphics t = Graphics.FromImage(newTemp))
+                {
+                    t.DrawImage(newTemp, 0, 0, panel.Width, panel.Height);
+                }
+                // e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
+
+                // Resize each layer (which is a bitmap)
+                //layers[i].Width = panel.Width;
+                Bitmap result = new Bitmap(panel.Width, panel.Height);
+                using (Graphics l = Graphics.FromImage(result))
+                {
+                    l.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
+                }
+                g.DrawImage(result, 0, 0, panel.Width, panel.Height);
+                layers[i] = result;
+                //g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
                 //panel.Refresh();
             }
         }
