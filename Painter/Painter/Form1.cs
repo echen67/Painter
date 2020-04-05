@@ -63,10 +63,7 @@ namespace Painter
             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
-            this.DoubleBuffered = true;
             DoubleBuffered = true;
-
-            colorBG.Click += new EventHandler(colorBG_Click);
 
             // Hide layer stuff until new image is created or opened
             layerPanel.Visible = false;
@@ -271,6 +268,30 @@ namespace Painter
             testG.Clear(Color.Transparent);
         }
 
+        private void panel_MouseClick(object sender, MouseEventArgs e)
+        {
+            // Eyedropper
+            if (toolSelected == 3)
+            {
+                Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
+                colorFG.BackColor = clr;
+                fgColor = clr;
+            }
+        }
+
+        private void panel_MouseEnter(object sender, EventArgs e)
+        {
+            Cursor.Hide();
+            paintCursor = true;
+        }
+
+        private void panel_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor.Show();
+            paintCursor = false;
+            panel.Refresh();
+        }
+
         // Custom method created to draw rectangles and ellipses more easily
         private Rectangle drawRect(int xDown, int yDown, int xUp, int yUp)
         {
@@ -326,50 +347,8 @@ namespace Painter
             return rect;
         }
 
-        // Opens up Form2 to create new image
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form2 newDialog = new Form2();
-            if (newDialog.ShowDialog() == DialogResult.OK)
-            {
-                saveToolStripMenuItem.Enabled = true;
-                panel.Width = newDialog.getWidth();
-                panel.Height = newDialog.getHeight();
-                setUpLayers();
-                panel.Visible = true;
-                panel.Enabled = true;
-
-                // Revert image back to originally selected size before saving
-                int origWidth = newDialog.getWidthText();
-                int origHeight = newDialog.getHeightText();
-
-
-                newDialog.Close();
-
-                layerPanel.Visible = true;
-                newLayer.Visible = true;
-            }
-        }
-
-        private void setUpLayers()
-        {
-            // Set up layers panel
-            layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers[0].MakeTransparent();
-            drawLayers.Insert(0, true);
-
-            layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers[1].MakeTransparent();
-            drawLayers.Insert(1, true);
-
-            temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            temp.MakeTransparent();
-
-            layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
-            layerPanel.SetItemChecked(1, true);
-            layerPanel.SetSelected(1, true);        // set bottom layer to selected
-        }
-
+        // Color Selection
+        #region
         // Set foreground color
         private void colorFG_Click(object sender, EventArgs e)
         {
@@ -401,8 +380,40 @@ namespace Painter
             colorFG.BackColor = fgColor;
             colorBG.BackColor = bgColor;
         }
+        #endregion
 
-        // Open existing image
+        // Change brush size
+        private void brushSizeBox_ValueChanged(object sender, EventArgs e)
+        {
+            brushSize = Decimal.ToInt32(brushSizeBox.Value);
+        }
+
+        // File menu items
+        #region
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 newDialog = new Form2();
+            if (newDialog.ShowDialog() == DialogResult.OK)
+            {
+                saveToolStripMenuItem.Enabled = true;
+                panel.Width = newDialog.getWidth();
+                panel.Height = newDialog.getHeight();
+                setUpLayers();
+                panel.Visible = true;
+                panel.Enabled = true;
+
+                // Revert image back to originally selected size before saving
+                int origWidth = newDialog.getWidthText();
+                int origHeight = newDialog.getHeightText();
+
+
+                newDialog.Close();
+
+                layerPanel.Visible = true;
+                newLayer.Visible = true;
+            }
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
@@ -437,12 +448,34 @@ namespace Painter
             }
         }
 
-        // Fit image to screen
-        private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            resizeImageHelper(panelContainer.Width, panelContainer.Height);
+            saveFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                // Resize all layers to original size before saving
+                resizeImageHelper(targetWidth, targetHeight);
+
+                Bitmap merged = new Bitmap(layers[0]);
+                Graphics g = Graphics.FromImage(merged);
+                for (int i = 0; i < layers.Count; i++)
+                {
+                    g.DrawImageUnscaled(layers[i], 0, 0);
+                }
+                merged.Save(saveFileDialog.FileName);
+
+                //pictureBox.Image.Save(saveFileDialog.FileName);
+            }
         }
 
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
+
+        // View menu items
+        #region
         // Custom resize method
         private void resizeImageHelper(int targetWidth, int targetHeight)
         {
@@ -492,6 +525,11 @@ namespace Painter
             }
         }
 
+        private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            resizeImageHelper(panelContainer.Width, panelContainer.Height);
+        }
+
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //pictureBox.Height += 50;
@@ -516,31 +554,41 @@ namespace Painter
             panel.AutoScroll = true;
             //pictureBox.Dock = DockStyle.None;
         }
+        #endregion
 
-        private void brushSizeBox_ValueChanged(object sender, EventArgs e)
+        // Set up layers panel
+        private void setUpLayers()
         {
-            brushSize = Decimal.ToInt32(brushSizeBox.Value);
+            // Set up layers panel
+            layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[0].MakeTransparent();
+            drawLayers.Insert(0, true);
+
+            layers.Insert(1, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[1].MakeTransparent();
+            drawLayers.Insert(1, true);
+
+            temp = new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            temp.MakeTransparent();
+
+            layerPanel.SetItemChecked(0, true);     //CAREFUL: using SetItemChecked() causes ItemCheck() to be called!
+            layerPanel.SetItemChecked(1, true);
+            layerPanel.SetSelected(1, true);        // set bottom layer to selected
         }
 
-        // Save image
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        // Create new layer
+        private void newLayer_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                // Resize all layers to original size before saving
-                resizeImageHelper(targetWidth, targetHeight);
+            layerPanel.Items.Insert(0, "Layer");
 
-                Bitmap merged = new Bitmap(layers[0]);
-                Graphics g = Graphics.FromImage(merged);
-                for (int i = 0; i < layers.Count; i++)
-                {
-                    g.DrawImageUnscaled(layers[i], 0, 0);
-                }
-                merged.Save(saveFileDialog.FileName);
+            //layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers.Add(new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
+            layers[layers.Count - 1].MakeTransparent();
 
-                //pictureBox.Image.Save(saveFileDialog.FileName);
-            }
+            //drawLayers.Insert(0, true);
+            drawLayers.Add(true);
+
+            layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
         }
 
         private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -562,26 +610,13 @@ namespace Painter
             activeLayer = layerPanel.Items.Count - 1 - activeLayer;
         }
 
-        // Create new layer
-        private void newLayer_Click(object sender, EventArgs e)
-        {
-            layerPanel.Items.Insert(0, "Layer");
-
-            //layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers.Add(new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
-            layers[layers.Count-1].MakeTransparent();
-
-            //drawLayers.Insert(0, true);
-            drawLayers.Add(true);
-
-            layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
-        }
-
         // Layer reorder
+        #region
         private void layerPanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (this.layerPanel.SelectedItem == null) { return; }
-            this.layerPanel.DoDragDrop(this.layerPanel.SelectedItem, DragDropEffects.Move);
+            //this.layerPanel.DoDragDrop(this.layerPanel.SelectedItem, DragDropEffects.Move);
+            // somehow this is messing up the ability to toggle layer visibility^
         }
 
         private void layerPanel_DragOver(object sender, DragEventArgs e)
@@ -598,37 +633,10 @@ namespace Painter
             this.layerPanel.Items.Remove(data);
             this.layerPanel.Items.Insert(index, data);
         }
+        #endregion
 
-        private void panel_MouseClick(object sender, MouseEventArgs e)
-        {
-            // Eyedropper
-            if (toolSelected == 3)
-            {
-                Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
-                colorFG.BackColor = clr;
-                fgColor = clr;
-            }
-        }
-
-        private void panel_MouseEnter(object sender, EventArgs e)
-        {
-            Cursor.Hide();
-            paintCursor = true;
-        }
-
-        private void panel_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor.Show();
-            paintCursor = false;
-            panel.Refresh();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        // Select tools
+        // Select tools (brush, eraser, etc)
+        #region
         private void brushButton_Click(object sender, EventArgs e)
         {
             toolSelected = 0;
@@ -658,6 +666,7 @@ namespace Painter
         {
             toolSelected = 5;
         }
+        #endregion
     }
 
     public class DoubleBufferedPanel : Panel

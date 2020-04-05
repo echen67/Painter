@@ -218,6 +218,7 @@
             this.colorBG.Size = new System.Drawing.Size(40, 40);
             this.colorBG.TabIndex = 3;
             this.colorBG.UseVisualStyleBackColor = false;
+            this.colorBG.Click += new System.EventHandler(this.colorBG_Click);
             // 
             // brushButton
             // 
