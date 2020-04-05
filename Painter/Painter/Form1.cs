@@ -102,19 +102,8 @@ namespace Painter
 
         private void panel_MouseDown(object sender, MouseEventArgs e)
         {
-            /*drawFlag = true;
-            xPos[0] = e.X;
-            xPos[1] = e.X;
-            yPos[0] = e.Y;
-            yPos[1] = e.Y;
-            xDown = e.X;
-            yDown = e.Y;
-            points = new List<Point>();
-            points.Add(new Point(e.X, e.Y));*/
-
+            if (layerPanel.SelectedIndex == -1) { return; }
             // Draw only if selected layer is visible
-            //MessageBox.Show(drawLayers[layerPanel.SelectedIndex].ToString());
-            //drawLayers[layerPanel.SelectedIndex]
             if (layerPanel.GetItemChecked(layerPanel.SelectedIndex))
             {
                 drawFlag = true;
@@ -131,6 +120,7 @@ namespace Painter
 
         private void panel_MouseMove(object sender, MouseEventArgs e)
         {
+            if (layerPanel.SelectedIndex == -1) { return; }
             if (!layerPanel.GetItemChecked(layerPanel.SelectedIndex)) { return; }
             mouseLoc = e.Location;
             panel.Refresh();
@@ -216,6 +206,7 @@ namespace Painter
 
         private void panel_MouseUp(object sender, MouseEventArgs e)
         {
+            if (layerPanel.SelectedIndex == -1) { return; }
             if (!layerPanel.GetItemChecked(layerPanel.SelectedIndex)) { return; }
             drawFlag = false;
             xUp = e.X;
@@ -610,6 +601,16 @@ namespace Painter
             layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
         }
 
+        // Delete layer
+        private void deleteLayer_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(layerPanel.SelectedIndex.ToString());
+            layers.RemoveAt(layers.Count - 1 - layerPanel.SelectedIndex);
+            layerPanel.Items.Remove(layerPanel.SelectedItem);
+            layerPanel.ClearSelected();
+            panel.Refresh();
+        }
+
         private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             int numItems = layerPanel.Items.Count;
@@ -627,6 +628,12 @@ namespace Painter
         {
             activeLayer = layerPanel.SelectedIndex;
             activeLayer = layerPanel.Items.Count - 1 - activeLayer;
+        }
+
+        private void layerPanel_DoubleClick(object sender, EventArgs e)
+        {
+            // Rename layer
+            //MessageBox.Show("double clicked");
         }
 
         // Layer reorder
@@ -651,10 +658,12 @@ namespace Painter
             int index = this.layerPanel.IndexFromPoint(point);
             if (index < 0) index = this.layerPanel.Items.Count - 1;
             object data = layerPanel.SelectedItem;
-            layerPanel.Items.Remove(data);
-            layerPanel.Items.Insert(index, data);
+            Bitmap tempSave = layers[layerPanel.SelectedIndex];
 
-            // need to also reorder the layers[i] bitmaps
+            layers.RemoveAt(layerPanel.SelectedIndex);
+            layerPanel.Items.Remove(data);
+            layers.Insert(index, tempSave);
+            layerPanel.Items.Insert(index, data);
         }
         #endregion
 

@@ -56,11 +56,12 @@
             this.opacityBar = new System.Windows.Forms.TrackBar();
             this.eyeDropButton = new System.Windows.Forms.Button();
             this.panelContainer = new System.Windows.Forms.Panel();
-            this.panel = new Painter.DoubleBufferedPanel();
             this.rectButton = new System.Windows.Forms.Button();
             this.ellipseButton = new System.Windows.Forms.Button();
             this.switchButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.deleteLayer = new System.Windows.Forms.Button();
+            this.panel = new Painter.DoubleBufferedPanel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
@@ -265,6 +266,7 @@
             this.layerPanel.SelectedIndexChanged += new System.EventHandler(this.layerPanel_SelectedIndexChanged);
             this.layerPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.layerPanel_DragDrop);
             this.layerPanel.DragOver += new System.Windows.Forms.DragEventHandler(this.layerPanel_DragOver);
+            this.layerPanel.DoubleClick += new System.EventHandler(this.layerPanel_DoubleClick);
             this.layerPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.layerPanel_MouseMove);
             // 
             // newLayer
@@ -272,7 +274,7 @@
             this.newLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.newLayer.Location = new System.Drawing.Point(951, 756);
             this.newLayer.Name = "newLayer";
-            this.newLayer.Size = new System.Drawing.Size(110, 23);
+            this.newLayer.Size = new System.Drawing.Size(90, 23);
             this.newLayer.TabIndex = 8;
             this.newLayer.Text = "New Layer";
             this.newLayer.UseVisualStyleBackColor = true;
@@ -331,23 +333,6 @@
             this.panelContainer.Size = new System.Drawing.Size(920, 736);
             this.panelContainer.TabIndex = 12;
             // 
-            // panel
-            // 
-            this.panel.BackColor = System.Drawing.Color.White;
-            this.panel.Enabled = false;
-            this.panel.Location = new System.Drawing.Point(0, 0);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(2000, 2000);
-            this.panel.TabIndex = 2;
-            this.panel.Visible = false;
-            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
-            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
-            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
-            this.panel.MouseEnter += new System.EventHandler(this.panel_MouseEnter);
-            this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
-            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
-            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
-            // 
             // rectButton
             // 
             this.rectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -390,6 +375,34 @@
             this.switchButton.UseVisualStyleBackColor = false;
             this.switchButton.Click += new System.EventHandler(this.switchButton_Click);
             // 
+            // deleteLayer
+            // 
+            this.deleteLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.deleteLayer.Location = new System.Drawing.Point(1047, 756);
+            this.deleteLayer.Name = "deleteLayer";
+            this.deleteLayer.Size = new System.Drawing.Size(90, 23);
+            this.deleteLayer.TabIndex = 8;
+            this.deleteLayer.Text = "Delete";
+            this.deleteLayer.UseVisualStyleBackColor = true;
+            this.deleteLayer.Click += new System.EventHandler(this.deleteLayer_Click);
+            // 
+            // panel
+            // 
+            this.panel.BackColor = System.Drawing.Color.White;
+            this.panel.Enabled = false;
+            this.panel.Location = new System.Drawing.Point(0, 0);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(2000, 2000);
+            this.panel.TabIndex = 2;
+            this.panel.Visible = false;
+            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
+            this.panel.MouseEnter += new System.EventHandler(this.panel_MouseEnter);
+            this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
+            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -402,6 +415,7 @@
             this.Controls.Add(this.rectButton);
             this.Controls.Add(this.eyeDropButton);
             this.Controls.Add(this.eraseButton);
+            this.Controls.Add(this.deleteLayer);
             this.Controls.Add(this.newLayer);
             this.Controls.Add(this.layerPanel);
             this.Controls.Add(this.colorFG);
@@ -458,6 +472,7 @@
         private System.Windows.Forms.Button colorFG;
         private System.Windows.Forms.Button switchButton;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button deleteLayer;
     }
 }
 
