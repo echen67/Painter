@@ -415,9 +415,6 @@ namespace Painter
                 int origWidth = newDialog.getWidthText();
                 int origHeight = newDialog.getHeightText();
 
-
-                newDialog.Close();
-
                 layerPanel.Visible = true;
                 newLayer.Visible = true;
             }
@@ -569,7 +566,6 @@ namespace Painter
         // Set up layers panel
         private void setUpLayers()
         {
-            // Set up layers panel
             layers.Insert(0, new Bitmap(panel.Width, panel.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb));
             layers[0].MakeTransparent();
             drawLayers.Insert(0, true);
@@ -601,16 +597,27 @@ namespace Painter
             layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
         }
 
+        // Edit layer name
+        private void editLayer_Click(object sender, EventArgs e)
+        {
+            Form3 editLayerDialog = new Form3();
+            editLayerDialog.setCurrentName(layerPanel.Items[layerPanel.SelectedIndex].ToString());
+            if (editLayerDialog.ShowDialog() == DialogResult.OK)
+            {
+                layerPanel.Items[layerPanel.SelectedIndex] = editLayerDialog.getNewName();
+            }
+        }
+
         // Delete layer
         private void deleteLayer_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(layerPanel.SelectedIndex.ToString());
             layers.RemoveAt(layers.Count - 1 - layerPanel.SelectedIndex);
             layerPanel.Items.Remove(layerPanel.SelectedItem);
             layerPanel.ClearSelected();
             panel.Refresh();
         }
 
+        // Called when an item gets checked or unchecked
         private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             int numItems = layerPanel.Items.Count;
@@ -624,6 +631,7 @@ namespace Painter
             panel.Refresh();
         }
 
+        // Select active layer
         private void layerPanel_SelectedIndexChanged(object sender, EventArgs e)
         {
             activeLayer = layerPanel.SelectedIndex;

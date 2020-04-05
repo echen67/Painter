@@ -10,13 +10,23 @@ using System.Windows.Forms;
 
 namespace Painter
 {
-    public partial class Form2 : Form
+    public partial class Form3 : Form
     {
-        
-        public Form2()
+        private string newLayerName = "default";
+
+        public Form3()
         {
             InitializeComponent();
-            cancelButton.Click += new EventHandler(cancelButton_Click);
+        }
+
+        public void setCurrentName(string input)
+        {
+            textBox.Text = input;
+        }
+
+        public string getNewName()
+        {
+            return newLayerName;
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -27,17 +37,11 @@ namespace Painter
         private void cancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            Close();
         }
 
-        public int getWidth()
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            return Int32.Parse(widthText.Text);
-        }
-
-        public int getHeight()
-        {
-            return Int32.Parse(heightText.Text);
+            newLayerName = textBox.Text;
         }
     }
 }
