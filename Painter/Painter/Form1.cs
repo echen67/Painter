@@ -102,7 +102,7 @@ namespace Painter
 
         private void panel_MouseDown(object sender, MouseEventArgs e)
         {
-            drawFlag = true;
+            /*drawFlag = true;
             xPos[0] = e.X;
             xPos[1] = e.X;
             yPos[0] = e.Y;
@@ -110,11 +110,28 @@ namespace Painter
             xDown = e.X;
             yDown = e.Y;
             points = new List<Point>();
-            points.Add(new Point(e.X, e.Y));
+            points.Add(new Point(e.X, e.Y));*/
+
+            // Draw only if selected layer is visible
+            //MessageBox.Show(drawLayers[layerPanel.SelectedIndex].ToString());
+            //drawLayers[layerPanel.SelectedIndex]
+            if (layerPanel.GetItemChecked(layerPanel.SelectedIndex))
+            {
+                drawFlag = true;
+                xPos[0] = e.X;
+                xPos[1] = e.X;
+                yPos[0] = e.Y;
+                yPos[1] = e.Y;
+                xDown = e.X;
+                yDown = e.Y;
+                points = new List<Point>();
+                points.Add(new Point(e.X, e.Y));
+            }
         }
 
         private void panel_MouseMove(object sender, MouseEventArgs e)
         {
+            if (!layerPanel.GetItemChecked(layerPanel.SelectedIndex)) { return; }
             mouseLoc = e.Location;
             panel.Refresh();
             if (drawFlag && toolSelected == 0)      // BRUSH
@@ -199,6 +216,7 @@ namespace Painter
 
         private void panel_MouseUp(object sender, MouseEventArgs e)
         {
+            if (!layerPanel.GetItemChecked(layerPanel.SelectedIndex)) { return; }
             drawFlag = false;
             xUp = e.X;
             yUp = e.Y;
@@ -506,6 +524,7 @@ namespace Painter
                 t.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 t.DrawImage(newTemp, 0, 0, panel.Width, panel.Height);
             }
+            temp = newTemp;
 
             // Resize each layer (which is a bitmap)
             Graphics g;
@@ -612,11 +631,13 @@ namespace Painter
 
         // Layer reorder
         #region
-        private void layerPanel_MouseDown(object sender, MouseEventArgs e)
+        private void layerPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (this.layerPanel.SelectedItem == null) { return; }
-            //this.layerPanel.DoDragDrop(this.layerPanel.SelectedItem, DragDropEffects.Move);
-            // somehow this is messing up the ability to toggle layer visibility^
+            if (e.Button == MouseButtons.Left)
+            {
+                if (layerPanel.SelectedItem == null) { return; }
+                layerPanel.DoDragDrop(layerPanel.SelectedItem, DragDropEffects.Move);
+            }
         }
 
         private void layerPanel_DragOver(object sender, DragEventArgs e)
@@ -630,8 +651,10 @@ namespace Painter
             int index = this.layerPanel.IndexFromPoint(point);
             if (index < 0) index = this.layerPanel.Items.Count - 1;
             object data = layerPanel.SelectedItem;
-            this.layerPanel.Items.Remove(data);
-            this.layerPanel.Items.Insert(index, data);
+            layerPanel.Items.Remove(data);
+            layerPanel.Items.Insert(index, data);
+
+            // need to also reorder the layers[i] bitmaps
         }
         #endregion
 

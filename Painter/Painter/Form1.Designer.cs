@@ -56,11 +56,11 @@
             this.opacityBar = new System.Windows.Forms.TrackBar();
             this.eyeDropButton = new System.Windows.Forms.Button();
             this.panelContainer = new System.Windows.Forms.Panel();
+            this.panel = new Painter.DoubleBufferedPanel();
             this.rectButton = new System.Windows.Forms.Button();
             this.ellipseButton = new System.Windows.Forms.Button();
             this.switchButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel = new Painter.DoubleBufferedPanel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.brushSizeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opacityBar)).BeginInit();
@@ -265,7 +265,7 @@
             this.layerPanel.SelectedIndexChanged += new System.EventHandler(this.layerPanel_SelectedIndexChanged);
             this.layerPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.layerPanel_DragDrop);
             this.layerPanel.DragOver += new System.Windows.Forms.DragEventHandler(this.layerPanel_DragOver);
-            this.layerPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.layerPanel_MouseDown);
+            this.layerPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.layerPanel_MouseMove);
             // 
             // newLayer
             // 
@@ -331,6 +331,23 @@
             this.panelContainer.Size = new System.Drawing.Size(920, 736);
             this.panelContainer.TabIndex = 12;
             // 
+            // panel
+            // 
+            this.panel.BackColor = System.Drawing.Color.White;
+            this.panel.Enabled = false;
+            this.panel.Location = new System.Drawing.Point(0, 0);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(2000, 2000);
+            this.panel.TabIndex = 2;
+            this.panel.Visible = false;
+            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
+            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
+            this.panel.MouseEnter += new System.EventHandler(this.panel_MouseEnter);
+            this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
+            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
+            // 
             // rectButton
             // 
             this.rectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -372,23 +389,6 @@
             this.toolTip1.SetToolTip(this.switchButton, "Switch Foreground and Background");
             this.switchButton.UseVisualStyleBackColor = false;
             this.switchButton.Click += new System.EventHandler(this.switchButton_Click);
-            // 
-            // panel
-            // 
-            this.panel.BackColor = System.Drawing.Color.White;
-            this.panel.Enabled = false;
-            this.panel.Location = new System.Drawing.Point(0, 0);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(2000, 2000);
-            this.panel.TabIndex = 2;
-            this.panel.Visible = false;
-            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_Paint);
-            this.panel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel_MouseClick);
-            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_MouseDown);
-            this.panel.MouseEnter += new System.EventHandler(this.panel_MouseEnter);
-            this.panel.MouseLeave += new System.EventHandler(this.panel_MouseLeave);
-            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_MouseMove);
-            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel_MouseUp);
             // 
             // Form1
             // 
