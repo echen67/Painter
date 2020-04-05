@@ -50,6 +50,9 @@ namespace Painter
         bool paintCursor = false;   // whether cursor should be circle
         Point mouseLoc;
 
+        int targetWidth = 1280;
+        int targetHeight = 720;
+
         public Form1()
         {
             InitializeComponent();
@@ -130,6 +133,7 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(temp);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 //Pen eraser = new Pen(Color.FromArgb(0, fgColor), brushSize);
                 //testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 //testG.DrawLines(eraser, pointsArr);
@@ -144,6 +148,7 @@ namespace Painter
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
             } else if (drawFlag && toolSelected == 2)   // ERASER
@@ -157,6 +162,7 @@ namespace Painter
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 testG.DrawLine(pen, xPos[0], yPos[0], xPos[1], yPos[1]);
                 panel.Refresh();
             } else if (drawFlag && toolSelected == 4)   // RECTANGLE PREVIEW
@@ -166,6 +172,7 @@ namespace Painter
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 if (Control.ModifierKeys == Keys.Shift)
                 {
                     testG.DrawRectangle(pen, drawSq(xDown, yDown, e.X, e.Y));
@@ -181,6 +188,7 @@ namespace Painter
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 if (Control.ModifierKeys == Keys.Shift)
                 {
                     testG.DrawEllipse(pen, drawSq(xDown, yDown, e.X, e.Y));
@@ -201,6 +209,7 @@ namespace Painter
             {
                 testG = Graphics.FromImage(temp);
                 testG.Clear(Color.Transparent);
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
                 pen.Color = Color.FromArgb(opacityBar.Value, fgColor);
                 pen.Width = brushSize;
@@ -209,6 +218,7 @@ namespace Painter
                 {
                     testG = Graphics.FromImage(layers[activeLayer]);
                     testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     testG.DrawCurve(pen, pointsArr);
                 }
                 panel.Refresh();
@@ -219,6 +229,7 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 testG.DrawLine(pen, xPos[0], yPos[0], e.X, e.Y);
                 panel.Refresh();
             }
@@ -228,6 +239,7 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 if (Control.ModifierKeys == Keys.Shift)
                 {
                     testG.DrawRectangle(pen, drawSq(xDown, yDown, xUp, yUp));
@@ -244,6 +256,7 @@ namespace Painter
                 pen.Width = brushSize;
                 testG = Graphics.FromImage(layers[activeLayer]);
                 testG.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                testG.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 if (Control.ModifierKeys == Keys.Shift)
                 {
                     testG.DrawEllipse(pen, drawSq(xDown, yDown, xUp, yUp));
@@ -325,6 +338,11 @@ namespace Painter
                 setUpLayers();
                 panel.Visible = true;
                 panel.Enabled = true;
+
+                // Revert image back to originally selected size before saving
+                int origWidth = newDialog.getWidthText();
+                int origHeight = newDialog.getHeightText();
+
 
                 newDialog.Close();
 
@@ -422,49 +440,55 @@ namespace Painter
         // Fit image to screen
         private void fitToScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            resizeImageHelper(panelContainer.Width, panelContainer.Height);
+        }
+
+        // Custom resize method
+        private void resizeImageHelper(int targetWidth, int targetHeight)
+        {
+            // Resize drawing panel
+            int widthDiff = panel.Width - targetWidth;
+            int heightDiff = panel.Height - targetHeight;
+            if (widthDiff > heightDiff)
+            {
+                float factor = ((float)targetWidth) / panel.Width;
+                float newWidth = targetWidth;
+                float newHeight = panel.Height * factor;
+                panel.Width = (int)newWidth;
+                panel.Height = (int)newHeight;
+            }
+            else
+            {
+                float factor = ((float)targetHeight) / panel.Height;
+                float newWidth = panel.Width * factor;
+                float newHeight = targetHeight;
+                panel.Width = (int)newWidth;
+                panel.Height = (int)newHeight;
+            }
+
+            // Resize temp layer (which is a bitmap)
+            Bitmap newTemp = new Bitmap(panel.Width, panel.Height);
+            using (Graphics t = Graphics.FromImage(newTemp))
+            {
+                t.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                t.DrawImage(newTemp, 0, 0, panel.Width, panel.Height);
+            }
+
+            // Resize each layer (which is a bitmap)
             Graphics g;
             for (int i = 0; i < layers.Count; i++)
             {
                 g = Graphics.FromImage(layers[i]);
-
-                int widthDiff = panel.Width - panelContainer.Width;
-                int heightDiff = panel.Height - panelContainer.Height;
-                if (widthDiff > heightDiff)
-                {
-                    float factor = ((float)panelContainer.Width) / panel.Width;
-                    float newWidth = panelContainer.Width;
-                    float newHeight = panel.Height * factor;
-                    panel.Width = (int)newWidth;
-                    panel.Height = (int)newHeight;
-                }
-                else
-                {
-                    float factor = ((float)panelContainer.Height) / panel.Height;
-                    float newWidth = panel.Width * factor;
-                    float newHeight = panelContainer.Height;
-                    panel.Width = (int)newWidth;
-                    panel.Height = (int)newHeight;
-                }
-
-                // Resize temp layer (which is a bitmap)
-                Bitmap newTemp = new Bitmap(panel.Width, panel.Height);
-                using (Graphics t = Graphics.FromImage(newTemp))
-                {
-                    t.DrawImage(newTemp, 0, 0, panel.Width, panel.Height);
-                }
-                // e.Graphics.DrawImage(temp, 0, 0, temp.Width, temp.Height);
-
-                // Resize each layer (which is a bitmap)
-                //layers[i].Width = panel.Width;
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 Bitmap result = new Bitmap(panel.Width, panel.Height);
                 using (Graphics l = Graphics.FromImage(result))
                 {
+                    l.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                     l.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
                 }
                 g.DrawImage(result, 0, 0, panel.Width, panel.Height);
                 layers[i] = result;
                 //g.DrawImage(layers[i], 0, 0, panel.Width, panel.Height);
-                //panel.Refresh();
             }
         }
 
@@ -474,6 +498,7 @@ namespace Painter
             //pictureBox.Width += 50;
             //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             //pictureBox.Dock = DockStyle.None;
+            resizeImageHelper(panel.Width + 100, panel.Height + 100);
         }
 
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -482,6 +507,7 @@ namespace Painter
             //pictureBox.Width -= 50;
             //pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             //pictureBox.Dock = DockStyle.None;
+            resizeImageHelper(panel.Width - 100, panel.Height - 100);
         }
 
         private void actualToolStripMenuItem_Click(object sender, EventArgs e)
@@ -502,6 +528,9 @@ namespace Painter
             saveFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
+                // Resize all layers to original size before saving
+                resizeImageHelper(targetWidth, targetHeight);
+
                 Bitmap merged = new Bitmap(layers[0]);
                 Graphics g = Graphics.FromImage(merged);
                 for (int i = 0; i < layers.Count; i++)
@@ -512,16 +541,6 @@ namespace Painter
 
                 //pictureBox.Image.Save(saveFileDialog.FileName);
             }
-        }
-
-        private void lineButton_Click(object sender, EventArgs e)
-        {
-            toolSelected = 1;
-        }
-
-        private void brushButton_Click(object sender, EventArgs e)
-        {
-            toolSelected = 0;
         }
 
         private void layerPanel_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -558,14 +577,26 @@ namespace Painter
             layerPanel.SetItemChecked(0, true);     // CAREFUL: causes ItemCheck() to be called
         }
 
-        private void eraseButton_Click(object sender, EventArgs e)
+        // Layer reorder
+        private void layerPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            toolSelected = 2;
+            if (this.layerPanel.SelectedItem == null) { return; }
+            this.layerPanel.DoDragDrop(this.layerPanel.SelectedItem, DragDropEffects.Move);
         }
 
-        private void eyeDropButton_Click(object sender, EventArgs e)
+        private void layerPanel_DragOver(object sender, DragEventArgs e)
         {
-            toolSelected = 3;
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void layerPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            Point point = layerPanel.PointToClient(new Point(e.X, e.Y));
+            int index = this.layerPanel.IndexFromPoint(point);
+            if (index < 0) index = this.layerPanel.Items.Count - 1;
+            object data = layerPanel.SelectedItem;
+            this.layerPanel.Items.Remove(data);
+            this.layerPanel.Items.Insert(index, data);
         }
 
         private void panel_MouseClick(object sender, MouseEventArgs e)
@@ -595,6 +626,27 @@ namespace Painter
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        // Select tools
+        private void brushButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 0;
+        }
+
+        private void lineButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 1;
+        }
+
+        private void eraseButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 2;
+        }
+
+        private void eyeDropButton_Click(object sender, EventArgs e)
+        {
+            toolSelected = 3;
         }
 
         private void rectButton_Click(object sender, EventArgs e)

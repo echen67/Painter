@@ -116,5 +116,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button cancelButton;
+
+        public int getWidthText()
+        {
+            return System.Int32.Parse(widthText.Text);
+        }
+
+        public int getHeightText()
+        {
+            return System.Int32.Parse(heightText.Text);
+        }
     }
 }
