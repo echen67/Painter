@@ -9,8 +9,7 @@ Features:
 -Line, rectangle/square, and ellipse/circle tools
 -Eyedropper (NOTE: it matters which layer is selected)
 -Layers
-  -Can add new layers, and toggle visibility for each
-  -NOTE: cannot delete layers yet
+  -Can add, delete, reorder, and edit the name of layers, and toggle visibility for each
 -New dialog
   -Can select size of new canvas
 -Open dialog
