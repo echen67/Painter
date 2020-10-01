@@ -36,9 +36,10 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(301, 168);
+            this.okButton.Location = new System.Drawing.Point(226, 136);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
+            this.okButton.Size = new System.Drawing.Size(56, 19);
             this.okButton.TabIndex = 0;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -46,9 +47,10 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(382, 168);
+            this.cancelButton.Location = new System.Drawing.Point(286, 136);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.Size = new System.Drawing.Size(56, 19);
             this.cancelButton.TabIndex = 0;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -56,32 +58,35 @@
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(137, 90);
+            this.textBox.Location = new System.Drawing.Point(103, 73);
+            this.textBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(203, 22);
+            this.textBox.Size = new System.Drawing.Size(153, 20);
             this.textBox.TabIndex = 1;
             this.textBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(184, 60);
+            this.label1.Location = new System.Drawing.Point(138, 49);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 17);
+            this.label1.Size = new System.Drawing.Size(87, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Rename layer to:";
             // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(482, 203);
+            this.ClientSize = new System.Drawing.Size(362, 165);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form3";
-            this.Text = "Form3";
+            this.Text = "Rename";
             this.ResumeLayout(false);
             this.PerformLayout();
 

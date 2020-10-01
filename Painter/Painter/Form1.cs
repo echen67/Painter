@@ -412,8 +412,8 @@ namespace Painter
                 panel.Enabled = true;
 
                 // Revert image back to originally selected size before saving
-                int origWidth = newDialog.getWidthText();
-                int origHeight = newDialog.getHeightText();
+                int origWidth = newDialog.getWidth();
+                int origHeight = newDialog.getHeight();
 
                 layerPanel.Visible = true;
                 newLayer.Visible = true;

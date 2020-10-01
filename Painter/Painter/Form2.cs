@@ -16,7 +16,7 @@ namespace Painter
         public Form2()
         {
             InitializeComponent();
-            cancelButton.Click += new EventHandler(cancelButton_Click);
+            _cancelButton.Click += new EventHandler(_cancelButton_Click);
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -24,7 +24,7 @@ namespace Painter
             DialogResult = DialogResult.OK;
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void _cancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
@@ -32,12 +32,12 @@ namespace Painter
 
         public int getWidth()
         {
-            return Int32.Parse(widthText.Text);
+            return (int)_widthChoose.Value;
         }
 
         public int getHeight()
         {
-            return Int32.Parse(heightText.Text);
+            return (int)_heightChoose.Value;
         }
     }
 }
