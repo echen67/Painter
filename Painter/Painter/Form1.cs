@@ -283,6 +283,15 @@ namespace Painter
             if (toolSelected == 3)
             {
                 Color clr = layers[activeLayer].GetPixel(e.X, e.Y);
+                
+                //turn transparent colors white
+                if (clr.A == 0)
+                {
+                    clr = Color.White;
+                }
+
+                //System.Diagnostics.Debug.WriteLine(clr.ToString());
+
                 colorFG.BackColor = clr;
                 fgColor = clr;
             }
